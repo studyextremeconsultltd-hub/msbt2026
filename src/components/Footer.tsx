@@ -9,7 +9,7 @@ const exploreLinks = [
   { href: "/courses", label: "Courses" },
   { href: "/university-progressions", label: "University Progressions" },
   { href: "/about#vision-mission", label: "News" },
-  { href: "/about#who-we-are", label: "Contact Us" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 const legalLinks = [

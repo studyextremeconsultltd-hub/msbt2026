@@ -9,7 +9,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/courses", label: "Courses" },
-  { href: "/about", label: "IQAC" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 const navLinkClass = (overlay: boolean) =>

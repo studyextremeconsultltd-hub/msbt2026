@@ -1,6 +1,8 @@
 # MSBT — Manchester School of Business and Technology
 
-Standalone Next.js website for MSBT (light mode). Separate from the Rose Empire repo.
+Standalone Next.js website for MSBT (light mode).
+
+**GitHub repository:** [studyextremeconsultltd-hub/msbt2026](https://github.com/studyextremeconsultltd-hub/msbt2026)
 
 ## Run locally
 
@@ -25,6 +27,8 @@ Open [http://localhost:3000](http://localhost:3000)
 | `/about` | About MSBT (tabbed content) |
 | `/courses` | All programmes |
 | `/courses/[slug]` | Course detail + enquiry sidebar |
+| `/contact` | Contact Us form |
+| `/university-progressions` | University pathways |
 
 ## Content
 
@@ -37,48 +41,37 @@ npm run build
 npm start
 ```
 
-## Deploy (GitHub + GoDaddy domain)
+## Deploy (GitHub + Vercel + GoDaddy)
 
-This site is a **Next.js** app. The recommended setup is:
+### 1. Push to GitHub (`msbt2026`)
 
-1. **GitHub** — store the code (this repo).
-2. **Vercel** — free hosting built for Next.js (automatic deploys on every push).
-3. **GoDaddy** — keep your domain; point DNS to Vercel (you do not need GoDaddy web hosting).
-
-### 1. Push to GitHub
-
-```bat
-gh auth login
-git add -A
-git commit -m "Initial MSBT website"
-gh repo create msbt-website --public --source=. --remote=origin --push
+```powershell
+cd "e:\MSBT\msbt-main"
+.\deploy.ps1
 ```
 
-Use a private repo instead of `--public` if you prefer.
+Or manually:
+
+```powershell
+git remote set-url origin https://github.com/studyextremeconsultltd-hub/msbt2026.git
+git push -u origin main
+```
 
 ### 2. Deploy on Vercel
 
-1. Sign in at [vercel.com](https://vercel.com) with your GitHub account.
-2. **Add New Project** → import this repository.
-3. Framework: **Next.js** (auto-detected). Root directory: `.` (repo root).
-4. Click **Deploy**. You will get a URL like `https://msbt-website.vercel.app`.
+1. Import [studyextremeconsultltd-hub/msbt2026](https://vercel.com/new/import?s=studyextremeconsultltd-hub/msbt2026)
+2. Framework: **Next.js** · Root directory: `./`
+3. Click **Deploy**
 
-### 3. Connect your GoDaddy domain
+### 3. Connect GoDaddy domain (`msbt.co.uk`)
 
-In **Vercel** → Project → **Settings** → **Domains** → add your domain (e.g. `msbt.org.uk`).
+**Vercel** → Settings → Domains → add `msbt.co.uk` and `www.msbt.co.uk`
 
-In **GoDaddy** → **DNS** for that domain:
+**GoDaddy** DNS:
 
 | Type | Name | Value |
 |------|------|--------|
 | A | `@` | `76.76.21.21` |
 | CNAME | `www` | `cname.vercel-dns.com` |
 
-(Use the exact records Vercel shows after you add the domain—they may vary slightly.)
-
-DNS can take up to 24–48 hours; often it works within an hour.
-
-### 4. Optional: `www` redirect
-
-In Vercel Domains, set the apex (`yourdomain.com`) as primary and redirect `www` to it (or the reverse).
-
+Delete any **WebsiteBuilder Site** record first.
