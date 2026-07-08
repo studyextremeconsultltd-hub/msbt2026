@@ -1,6 +1,6 @@
 "use client";
 
-import ImageBannerSlider, { manchesterSlides } from "@/components/ImageBannerSlider";
+import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider";
 
 export default function CitySkylineBanner() {
   return (
@@ -9,7 +9,7 @@ export default function CitySkylineBanner() {
         <p className="mb-5 text-center text-sm font-bold uppercase tracking-[0.25em] text-white/70 sm:text-base">
           Manchester · United Kingdom
         </p>
-        <ImageBannerSlider slides={manchesterSlides} variant="showcase" />
+        <ImageBannerSlider slides={campusSlides} variant="showcase" />
         <p className="mt-5 text-center text-base font-bold text-white/80 sm:text-lg">
           Where ambition meets opportunity
         </p>

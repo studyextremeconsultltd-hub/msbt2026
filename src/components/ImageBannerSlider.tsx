@@ -149,3 +149,22 @@ export const manchesterSlides = [
     caption: "Flexible online learning with professional accreditation",
   },
 ] as const;
+
+/** Bottom showcase slider — Universal Square campus (from Pics/) */
+export const campusSlides = [
+  {
+    src: "/manchester/campus-01.jpeg",
+    alt: "Universal Square Manchester — landscaped courtyard and modern office buildings",
+    caption: "Universal Square, Manchester — where ambition meets opportunity",
+  },
+  {
+    src: "/manchester/campus-02.jpeg",
+    alt: "Aerial view of Universal Square Manchester campus and city skyline",
+    caption: "A modern campus in the heart of Manchester’s business district",
+  },
+  {
+    src: "/manchester/campus-03.jpeg",
+    alt: "Universal Square Manchester at golden hour with city skyline behind",
+    caption: "Professional education rooted in a world-class city",
+  },
+] as const;

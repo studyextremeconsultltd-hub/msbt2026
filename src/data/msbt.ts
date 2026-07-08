@@ -28,7 +28,7 @@ export const site = {
   shortName: "MSBT",
   tagline:
     "Your career, your pace, your future. Study business, health & social care and psychology online, on your schedule.",
-  email: "will be provided",
+  email: "naveed.rehman@msbt.co.uk",
   phone: "0000 (will be provided)",
   whatsapp: "0000 (will be provided)",
   address: "Manchester, United Kingdom",
