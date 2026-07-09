@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { GraduationCap, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
-import { courseListForEnquiry } from "@/data/msbt";
+import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
+import { courseListForEnquiry, site } from "@/data/msbt";
 
-const contactMethods = ["Email", "Phone", "WhatsApp"] as const;
 const hearAboutOptions = [
   "Google search",
   "Social media",
@@ -17,26 +16,89 @@ const labelClass = "mb-2 flex items-center gap-2 text-sm font-bold text-ink sm:t
 const inputClass =
   "w-full rounded-xl border-2 border-line bg-cream/50 px-4 py-3.5 text-base font-medium text-ink outline-none transition placeholder:text-muted/70 focus:border-navy focus:bg-white focus:ring-2 focus:ring-navy/15";
 
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
+function buildMailto(name: string, email: string, phone: string, course: string, query: string, heardFrom: string) {
+  const allCourses = courseListForEnquiry();
+  const courseTitle =
+    course === "unsure"
+      ? "Not sure yet — advise me"
+      : (allCourses.find((c) => c.slug === course)?.title ?? course) || "Not specified";
+
+  const body = [
+    `Name: ${name}`,
+    `Email: ${email}`,
+    `Phone: ${phone}`,
+    `Programme: ${courseTitle}`,
+    heardFrom ? `Heard from: ${heardFrom}` : "",
+    "",
+    query || "(No additional message)",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return `mailto:${site.email}?subject=${encodeURIComponent(`MSBT Enquiry — ${courseTitle}`)}&body=${encodeURIComponent(body)}`;
+}
+
 export default function HeroEnquiryForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [course, setCourse] = useState("");
   const [query, setQuery] = useState("");
-  const [contactMethod, setContactMethod] = useState<(typeof contactMethods)[number]>("Email");
   const [heardFrom, setHeardFrom] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
   const allCourses = courseListForEnquiry();
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !email.trim()) return;
-    setSubmitted(true);
+
+    setSubmitState("submitting");
+    setStatusMessage("");
+
+    try {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, course, query, heardFrom }),
+      });
+
+      const data = (await res.json()) as { success?: boolean; message?: string };
+
+      if (res.ok && data.success) {
+        setSubmitState("success");
+        setStatusMessage(data.message ?? "Thank you! Your enquiry has been sent.");
+        setName("");
+        setPhone("");
+        setEmail("");
+        setCourse("");
+        setQuery("");
+        setHeardFrom("");
+        return;
+      }
+
+      throw new Error(data.message ?? "Submission failed");
+    } catch {
+      try {
+        window.location.href = buildMailto(name, email, phone, course, query, heardFrom);
+        setSubmitState("success");
+        setStatusMessage(
+          `Your email app has been opened to send your enquiry to ${site.email}.`,
+        );
+      } catch {
+        setSubmitState("error");
+        setStatusMessage(
+          `Unable to send automatically. Please email us directly at ${site.email}.`,
+        );
+      }
+    }
   }
 
   return (
-    <div className="mx-auto mt-8 w-full max-w-2xl">
+    <div className="relative mx-auto mt-8 w-full max-w-2xl">
       <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
         <div className="relative bg-gradient-to-r from-navy via-[#1a3060] to-navy px-6 py-6 sm:px-8 sm:py-7 ring-1 ring-gold/25">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(232,108,42,0.3),transparent_55%)]" />
@@ -49,25 +111,43 @@ export default function HeroEnquiryForm() {
                 Start Your Journey
               </h3>
               <p className="mt-2 text-base font-semibold text-white/90 sm:text-lg">
-                Tell us about your goals — our admissions team will respond within 24 hours.
+                Submit your enquiry — our admissions team at{" "}
+                <span className="text-gold">{site.email}</span> will respond within 24 hours.
               </p>
             </div>
           </div>
         </div>
 
         <div className="p-6 sm:p-8">
-          {submitted ? (
-            <div className="rounded-2xl border-2 border-teal/30 bg-gradient-to-br from-teal/10 to-sky/10 p-8 text-center">
-              <p className="text-xl font-bold text-teal sm:text-2xl">Thank you for your enquiry!</p>
-              <p className="mt-3 text-base font-medium text-muted sm:text-lg">
-                We&apos;ve received your details and will be in touch shortly to discuss your
-                programme options.
-              </p>
+          {submitState === "success" ? (
+            <div
+              role="status"
+              className="flex gap-3 rounded-2xl border-2 border-teal/30 bg-gradient-to-br from-teal/10 to-sky/10 p-8"
+            >
+              <CheckCircle2 className="mt-0.5 h-7 w-7 shrink-0 text-teal" aria-hidden />
+              <div>
+                <p className="text-xl font-bold text-teal sm:text-2xl">Thank you for your enquiry!</p>
+                <p className="mt-3 text-base font-medium text-muted sm:text-lg">{statusMessage}</p>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
+              {submitState === "error" && statusMessage && (
+                <div
+                  role="alert"
+                  className="flex gap-3 rounded-2xl border-2 border-red-300 bg-red-50 p-4"
+                >
+                  <AlertCircle className="h-5 w-5 shrink-0 text-red-600" aria-hidden />
+                  <p className="text-sm font-bold text-red-700">{statusMessage}</p>
+                </div>
+              )}
+
               <p className="text-sm font-bold text-muted sm:text-base">
-                Fields marked <span className="text-orange">*</span> are required.
+                Fields marked <span className="text-orange">*</span> are required. Enquiries are sent to{" "}
+                <a href={`mailto:${site.email}`} className="text-navy underline-offset-2 hover:underline">
+                  {site.email}
+                </a>
+                .
               </p>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -146,69 +226,49 @@ export default function HeroEnquiryForm() {
                   onChange={(e) => setQuery(e.target.value)}
                   rows={4}
                   placeholder="Tell us about your background, career goals, or any questions you have…"
-                  className={`${inputClass} resize-none`}
+                  className={`${inputClass} resize-y min-h-[120px]`}
                 />
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-bold text-ink sm:text-base">
-                    Preferred Contact Method
-                  </label>
-                  <div className="flex flex-wrap gap-2.5">
-                    {contactMethods.map((method) => (
-                      <label
-                        key={method}
-                        className={`cursor-pointer rounded-xl border-2 px-4 py-2.5 text-sm font-bold transition sm:text-base ${
-                          contactMethod === method
-                            ? "border-navy bg-navy text-white"
-                            : "border-line bg-cream/50 text-ink hover:border-navy/40"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="contactMethod"
-                          value={method}
-                          checked={contactMethod === method}
-                          onChange={() => setContactMethod(method)}
-                          className="sr-only"
-                        />
-                        {method}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-bold text-ink sm:text-base">
-                    How did you hear about us?
-                  </label>
-                  <select
-                    value={heardFrom}
-                    onChange={(e) => setHeardFrom(e.target.value)}
-                    className={inputClass}
-                  >
-                    <option value="">Optional</option>
-                    {hearAboutOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="mb-2 block text-sm font-bold text-ink sm:text-base">
+                  How did you hear about us?
+                </label>
+                <select
+                  value={heardFrom}
+                  onChange={(e) => setHeardFrom(e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">Optional</option>
+                  {hearAboutOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <button
                 type="submit"
-                className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-orange to-peach-deep py-4 text-lg font-bold text-white shadow-xl shadow-orange/30 transition hover:shadow-2xl hover:brightness-105 sm:text-xl"
+                disabled={submitState === "submitting"}
+                className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-orange to-peach-deep py-4 text-lg font-bold text-white shadow-xl shadow-orange/30 transition hover:shadow-2xl hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70 sm:text-xl"
               >
-                <Send size={22} className="transition group-hover:translate-x-1" />
-                Submit Enquiry
+                {submitState === "submitting" ? (
+                  <>
+                    <Loader2 className="h-6 w-6 animate-spin" aria-hidden />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    <Send size={22} className="transition group-hover:translate-x-1" />
+                    Submit Enquiry
+                  </>
+                )}
               </button>
 
               <p className="text-center text-sm font-medium leading-relaxed text-muted">
-                By submitting, you agree to be contacted about MSBT programmes. Your data is
-                handled securely and never shared with third parties.
+                By submitting, you agree to be contacted about MSBT programmes. Your enquiry is delivered
+                securely to our admissions team.
               </p>
             </form>
           )}

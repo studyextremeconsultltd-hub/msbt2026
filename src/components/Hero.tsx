@@ -47,7 +47,9 @@ export default function Hero() {
               <AnimatedSchoolTitle text={site.name} />
             </div>
 
-            <HeroEnquiryForm />
+            <div className="relative z-10 mt-8">
+              <HeroEnquiryForm />
+            </div>
           </div>
 
           <HeroSideCourseColumn side="right" />
