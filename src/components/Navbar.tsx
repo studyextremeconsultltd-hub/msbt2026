@@ -35,7 +35,7 @@ export default function Navbar({
       } z-50 ${className}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8 lg:py-3.5">
-        <BrandLogo overlay={overlay} size="md" />
+        <BrandLogo overlay={overlay} size="lg" />
 
         <nav className="hidden items-center gap-6 md:flex lg:gap-10">
           {links.map((l) => (

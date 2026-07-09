@@ -23,7 +23,7 @@ export default function AboutPage() {
                 professionally accredited education for a global community of learners.
               </p>
             </div>
-            <BrandLogo overlay size="lg" showText={false} />
+            <BrandLogo overlay size="lg" />
           </div>
         </div>
       </section>
