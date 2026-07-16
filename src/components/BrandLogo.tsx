@@ -1,5 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { site } from "@/data/msbt";
 
 type BrandLogoProps = {
@@ -25,18 +24,15 @@ export default function BrandLogo({
   const textClass = inverted || overlay ? "text-white" : "text-navy";
 
   return (
-    <Link href="/" className="flex items-center gap-2.5 sm:gap-3">
+    <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
       <div
         className="relative shrink-0 overflow-hidden rounded-xl bg-white shadow-md ring-2 ring-gold/40"
         style={{ width: s.img, height: s.img }}
       >
-        <Image
+        <img
           src="/brand/msbt-logo.png"
           alt={`${site.name} logo`}
-          fill
-          className="object-contain p-1"
-          sizes={`${s.img}px`}
-          priority
+          className="absolute inset-0 h-full w-full object-contain p-1"
         />
       </div>
       {showText && (

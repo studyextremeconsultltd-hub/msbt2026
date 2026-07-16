@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -16,7 +14,7 @@ function CoursePill({ courseIndex }: { courseIndex: number }) {
 
   return (
     <Link
-      href={`/courses/${course.slug}`}
+      to={`/courses/${course.slug}`}
       className="group block rounded-2xl border-2 border-gold/40 bg-gradient-to-br from-[#0f1f3d] via-navy to-[#0a1628] px-4 py-4 shadow-lg shadow-navy/30 ring-1 ring-gold/20 transition hover:scale-[1.02] hover:border-gold/60 hover:shadow-xl"
     >
       <p className="line-clamp-3 text-sm font-bold leading-snug text-white sm:text-base">

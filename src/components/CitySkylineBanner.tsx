@@ -1,5 +1,3 @@
-"use client";
-
 import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider";
 
 export default function CitySkylineBanner() {

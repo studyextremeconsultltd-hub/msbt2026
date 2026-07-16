@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { aboutTabs } from "@/data/content";
 

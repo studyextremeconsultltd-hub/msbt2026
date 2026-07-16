@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
 import { courseListForEnquiry, site } from "@/data/msbt";
@@ -59,42 +57,11 @@ export default function HeroEnquiryForm() {
     setSubmitState("submitting");
     setStatusMessage("");
 
-    try {
-      const res = await fetch("/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, course, query, heardFrom }),
-      });
-
-      const data = (await res.json()) as { success?: boolean; message?: string };
-
-      if (res.ok && data.success) {
-        setSubmitState("success");
-        setStatusMessage(data.message ?? "Thank you! Your enquiry has been sent.");
-        setName("");
-        setPhone("");
-        setEmail("");
-        setCourse("");
-        setQuery("");
-        setHeardFrom("");
-        return;
-      }
-
-      throw new Error(data.message ?? "Submission failed");
-    } catch {
-      try {
-        window.location.href = buildMailto(name, email, phone, course, query, heardFrom);
-        setSubmitState("success");
-        setStatusMessage(
-          `Your email app has been opened to send your enquiry to ${site.email}.`,
-        );
-      } catch {
-        setSubmitState("error");
-        setStatusMessage(
-          `Unable to send automatically. Please email us directly at ${site.email}.`,
-        );
-      }
-    }
+    window.location.href = buildMailto(name, email, phone, course, query, heardFrom);
+    setSubmitState("success");
+    setStatusMessage(
+      `Your email app has been opened to send your enquiry to ${site.email}.`,
+    );
   }
 
   return (

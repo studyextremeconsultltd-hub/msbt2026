@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { courses } from "@/data/students";

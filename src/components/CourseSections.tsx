@@ -1,7 +1,4 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import ImageBannerSlider, { manchesterSlides } from "@/components/ImageBannerSlider";
 import { categories, courses, formatGBP } from "@/data/msbt";
 
@@ -33,11 +30,10 @@ export function LightStudentScene() {
                 key={n}
                 className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-white ring-2 ring-peach sm:h-16 sm:w-16"
               >
-                <Image
+                <img
                   src={`/students/student-${n}.png`}
                   alt=""
-                  fill
-                  className="object-cover"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
             ))}
@@ -81,7 +77,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
             </h2>
           </div>
           <Link
-            href="/courses"
+            to="/courses"
             className="text-base font-bold text-navy hover:underline sm:text-lg"
           >
             View all courses →
@@ -92,11 +88,11 @@ export function CourseGrid({ limit }: { limit?: number }) {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={`/courses?category=${cat.id}`}
+              to={`/courses?category=${cat.id}`}
               className="group overflow-hidden rounded-3xl border border-line bg-cream card-shadow transition hover:-translate-y-1"
             >
               <div className="relative h-52 sm:h-56">
-                <Image src={cat.image} alt={cat.title} fill className="object-cover" quality={90} />
+                <img src={cat.image} alt={cat.title} className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-navy/30" />
                 <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-4 py-1.5 text-sm font-bold text-navy">
                   From {formatGBP(cat.from)}
@@ -116,11 +112,11 @@ export function CourseGrid({ limit }: { limit?: number }) {
           {list.map((c) => (
             <Link
               key={c.slug}
-              href={`/courses/${c.slug}`}
+              to={`/courses/${c.slug}`}
               className="group overflow-hidden rounded-2xl border border-line bg-cream transition hover:border-navy/30 hover:card-shadow"
             >
               <div className="relative h-44 sm:h-48">
-                <Image src={c.image} alt={c.title} fill className="object-cover" quality={90} />
+                <img src={c.image} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-navy/25" />
                 <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-sm font-bold text-navy">
                   {c.level}

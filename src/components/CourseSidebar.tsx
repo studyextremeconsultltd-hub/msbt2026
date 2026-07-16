@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import type { Course } from "@/data/msbt";
 import {

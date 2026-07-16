@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import ContactSidebar from "@/components/ContactSidebar";
 import { site } from "@/data/msbt";
 
-export const metadata: Metadata = {
-  title: `Contact Us | ${site.shortName}`,
-  description: `Get in touch with ${site.name}. Enquiries about admissions, courses, and student support.`,
-};
+export default function Contact() {
+  useEffect(() => {
+    document.title = `Contact Us | ${site.shortName}`;
+    return () => {
+      document.title = "MSBT | Manchester School of Business and Technology";
+    };
+  }, []);
 
-export default function ContactPage() {
   return (
     <main className="min-h-screen">
       <Navbar />

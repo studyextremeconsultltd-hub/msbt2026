@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { site } from "@/data/msbt";
 import AnimatedSchoolTitle from "@/components/AnimatedSchoolTitle";

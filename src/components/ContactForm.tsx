@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, Loader2, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
 import { site } from "@/data/msbt";
@@ -106,7 +104,7 @@ export default function ContactForm() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validationErrors = validate(fields);
     if (Object.keys(validationErrors).length > 0) {
@@ -120,37 +118,11 @@ export default function ContactForm() {
     setStatusMessage("");
     setErrors({});
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fields),
-      });
-
-      const data = (await res.json()) as { success?: boolean; message?: string };
-
-      if (res.ok && data.success) {
-        setSubmitState("success");
-        setStatusMessage(data.message ?? "Thank you! Your message has been sent successfully.");
-        setFields({ name: "", email: "", phone: "", subject: "", message: "" });
-        return;
-      }
-
-      throw new Error(data.message ?? "Submission failed");
-    } catch {
-      try {
-        mailtoFallback(fields);
-        setSubmitState("success");
-        setStatusMessage(
-          "We opened your email app as a fallback. Please send the message to complete your enquiry.",
-        );
-      } catch {
-        setSubmitState("error");
-        setStatusMessage(
-          "Something went wrong. Please try again or email us directly using the contact details on this page.",
-        );
-      }
-    }
+    mailtoFallback(fields);
+    setSubmitState("success");
+    setStatusMessage(
+      "We opened your email app. Please send the message to complete your enquiry.",
+    );
   }
 
   const fieldIds = {

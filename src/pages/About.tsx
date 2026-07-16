@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import BrandLogo from "@/components/BrandLogo";
 import { site } from "@/data/msbt";
 
-export default function AboutPage() {
+export default function About() {
   return (
     <main className="min-h-screen">
       <Navbar />

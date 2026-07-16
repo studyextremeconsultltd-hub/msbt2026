@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
@@ -39,7 +37,7 @@ export default function Navbar({
 
         <nav className="hidden items-center gap-6 md:flex lg:gap-10">
           {links.map((l) => (
-            <Link key={l.label} href={l.href} className={navLinkClass(overlay)}>
+            <Link key={l.label} to={l.href} className={navLinkClass(overlay)}>
               {l.label}
             </Link>
           ))}
@@ -47,7 +45,7 @@ export default function Navbar({
 
         <div className="flex items-center gap-3">
           <Link
-            href="/courses"
+            to="/courses"
             className="hidden rounded-full bg-orange px-5 py-2.5 text-sm font-bold text-white shadow-md ring-2 ring-gold/30 transition hover:bg-orange/90 sm:inline-flex"
           >
             Enquire Now
@@ -72,7 +70,7 @@ export default function Navbar({
           {links.map((l) => (
             <Link
               key={l.label}
-              href={l.href}
+              to={l.href}
               className={`block py-2.5 text-base font-bold ${
                 overlay ? "text-white" : "text-ink"
               }`}
@@ -82,7 +80,7 @@ export default function Navbar({
             </Link>
           ))}
           <Link
-            href="/courses"
+            to="/courses"
             className="mt-3 block rounded-full bg-orange px-5 py-3 text-center text-sm font-bold text-white"
             onClick={() => setOpen(false)}
           >

@@ -1,10 +1,10 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { universityProgressionsContent } from "@/data/content";
 import { site } from "@/data/msbt";
 
-export default function UniversityProgressionsPage() {
+export default function UniversityProgressions() {
   const { title, intro, sections, cta } = universityProgressionsContent;
 
   return (
@@ -38,7 +38,7 @@ export default function UniversityProgressionsPage() {
         <div className="mt-10 rounded-2xl border-2 border-orange/30 bg-gradient-to-r from-orange/10 to-gold/10 p-8 text-center">
           <p className="text-lg font-bold text-navy md:text-xl">{cta}</p>
           <Link
-            href="/courses"
+            to="/courses"
             className="mt-6 inline-flex rounded-full bg-orange px-8 py-3.5 text-base font-bold text-white shadow-lg ring-2 ring-gold/30 transition hover:bg-orange/90"
           >
             Explore Programmes

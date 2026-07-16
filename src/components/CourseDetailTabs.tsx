@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import type { Course } from "@/data/msbt";
 import { getCourseDetails } from "@/data/content";
@@ -34,7 +32,7 @@ function ProgressionText({ text }: { text: string }) {
   return (
     <p>
       {parts[0]}
-      <Link href="/university-progressions" className="font-bold text-orange hover:underline">
+      <Link to="/university-progressions" className="font-bold text-orange hover:underline">
         University Progressions page
       </Link>
       {parts[1]}
@@ -161,7 +159,7 @@ export default function CourseDetailTabs({ course }: { course: Course }) {
               <Section title="University Progressions">
                 <RichText text={details.universityProgressions} />
                 <Link
-                  href="/university-progressions"
+                  to="/university-progressions"
                   className="mt-4 inline-flex font-bold text-orange hover:underline"
                 >
                   View all university progression routes →
@@ -176,7 +174,7 @@ export default function CourseDetailTabs({ course }: { course: Course }) {
                   programmes and eligible university pathways.
                 </p>
                 <Link
-                  href="/university-progressions"
+                  to="/university-progressions"
                   className="mt-2 inline-flex font-bold text-orange hover:underline"
                 >
                   University Progressions →

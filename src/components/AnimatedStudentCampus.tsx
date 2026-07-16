@@ -1,6 +1,3 @@
-"use client";
-
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { students, type StudentAgent } from "@/data/students";
@@ -47,7 +44,11 @@ function StudentAvatar({ student, active, message }: { student: StudentAgent; ac
             active ? "border-cyan shadow-cyan/30" : "border-white/20"
           }`}
         >
-          <Image src={student.image} alt={student.name} fill className="object-cover" sizes="112px" />
+          <img
+            src={student.image}
+            alt={student.name}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
           {active && (
             <motion.span
               className="absolute inset-0 rounded-full border-2 border-cyan/60"
@@ -145,7 +146,11 @@ export default function AnimatedStudentCampus() {
             animate={{ scale: i === activeIndex ? 1.08 : 1, opacity: i === activeIndex ? 1 : 0.55 }}
             className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-white/20"
           >
-            <Image src={s.image} alt={s.name} fill className="object-cover" sizes="48px" />
+            <img
+              src={s.image}
+              alt={s.name}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </motion.div>
         ))}
       </div>

@@ -1,17 +1,7 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { MapPin, Search } from "lucide-react";
 
-const GlobeExplorer = dynamic(() => import("@/components/GlobeExplorer"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-[420px] items-center justify-center bg-[#000814] text-sm text-white/70 md:h-[520px] lg:h-[600px]">
-      Loading 3D globe…
-    </div>
-  ),
-});
+const GlobeExplorer = lazy(() => import("@/components/GlobeExplorer"));
 
 export default function ExploreMSBT() {
   const [input, setInput] = useState("");
@@ -49,7 +39,15 @@ export default function ExploreMSBT() {
         </form>
 
         <div className="overflow-hidden rounded-3xl border border-line card-shadow">
-          <GlobeExplorer searchLocation={searchLocation} />
+          <Suspense
+            fallback={
+              <div className="flex h-[420px] items-center justify-center bg-[#000814] text-sm text-white/70 md:h-[520px] lg:h-[600px]">
+                Loading 3D globe…
+              </div>
+            }
+          >
+            <GlobeExplorer searchLocation={searchLocation} />
+          </Suspense>
         </div>
       </div>
     </section>

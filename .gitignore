@@ -14,7 +14,8 @@
 # testing
 /coverage
 
-# next.js
+# vite
+/dist
 /.next/
 /out/
 
@@ -34,7 +35,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
+# vercel (legacy — project no longer uses Vercel)
 .vercel
 
 # local university source docs (content extracted to src/data)

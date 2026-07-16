@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { stats } from "@/data/msbt";
 
 const tones: Record<string, string> = {
@@ -21,7 +21,7 @@ export default function StatsSection() {
             <p className="mt-2 text-sm opacity-90">{s.label}</p>
             {s.cta && (
               <Link
-                href="/courses"
+                to="/courses"
                 className="mt-6 inline-flex w-fit rounded-full bg-white/20 px-4 py-2 text-sm font-semibold backdrop-blur hover:bg-white/30"
               >
                 Browse courses →

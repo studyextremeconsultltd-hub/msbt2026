@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import BackToTop from "@/components/BackToTop";
 import BrandLogo from "@/components/BrandLogo";
@@ -56,7 +56,7 @@ export default function Footer() {
       <div className="bg-[#0066cc] py-5 ring-1 ring-gold/20">
         <div className="mx-auto max-w-7xl px-4 text-center lg:px-8">
           <Link
-            href="/courses"
+            to="/courses"
             className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-white transition hover:text-white/90 sm:text-xl"
           >
             Our Popular Online Courses
@@ -81,7 +81,7 @@ export default function Footer() {
               {exploreLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    to={link.href}
                     className="text-base font-bold text-white/90 transition hover:text-sky sm:text-lg"
                   >
                     {link.label}
@@ -99,7 +99,7 @@ export default function Footer() {
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    to={link.href}
                     className="text-base font-bold text-white/90 transition hover:text-sky sm:text-lg"
                   >
                     {link.label}

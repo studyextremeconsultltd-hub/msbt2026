@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { courses } from "@/data/msbt";
@@ -60,7 +58,7 @@ function RotatingBubble({ slot }: { slot: Slot }) {
       }}
     >
       <Link
-        href={`/courses/${course.slug}`}
+        to={`/courses/${course.slug}`}
         className="group block rounded-full bg-ink px-4 py-3 shadow-lg ring-1 ring-white/10 transition hover:scale-[1.03] hover:bg-black hover:shadow-xl"
       >
         <AnimatePresence mode="wait">

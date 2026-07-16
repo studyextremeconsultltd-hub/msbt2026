@@ -1,5 +1,3 @@
-"use client";
-
 import ImageBannerSlider, { manchesterSlides } from "@/components/ImageBannerSlider";
 
 export default function HeroImageSlider() {

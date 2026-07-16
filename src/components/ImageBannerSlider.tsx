@@ -1,6 +1,3 @@
-"use client";
-
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -77,14 +74,10 @@ export default function ImageBannerSlider({
             transition={{ duration: 0.65, ease: "easeOut" }}
             className="absolute inset-0"
           >
-            <Image
+            <img
               src={slide.src}
               alt={slide.alt}
-              fill
-              priority={index === 0}
-              quality={95}
-              className="object-cover object-center"
-              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="absolute inset-0 h-full w-full object-cover object-center"
             />
           </motion.div>
         </AnimatePresence>

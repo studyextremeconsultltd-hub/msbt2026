@@ -1,5 +1,5 @@
 @echo off
-title MSBT Website - Next.js
+title MSBT Website - Vite
 cd /d "%~dp0"
 echo.
 echo  Manchester School of Business and Technology

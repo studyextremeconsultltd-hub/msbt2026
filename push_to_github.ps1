@@ -19,5 +19,5 @@ git push -u origin main
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "SUCCESS: https://github.com/$repo" -ForegroundColor Green
-    Start-Process "https://vercel.com/new/import?s=$repo"
+    Write-Host "GitHub Pages: Settings → Pages → Source: GitHub Actions"
 }

@@ -1,8 +1,10 @@
 # MSBT — Manchester School of Business and Technology
 
-Standalone Next.js website for MSBT (light mode).
+Static Vite + React website (Automexa-style). **No Next.js. No Vercel.**
 
 **GitHub repository:** [studyextremeconsultltd-hub/msbt2026](https://github.com/studyextremeconsultltd-hub/msbt2026)
+
+Visual effects (Framer Motion, sliders, MapLibre globe) run in the browser — same look as before.
 
 ## Run locally
 
@@ -19,59 +21,53 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
+Preview production build:
+
+```bat
+npm run build
+npm run preview
+```
+
 ## Pages
 
 | Route | Description |
 |-------|-------------|
-| `/` | Home — hero, stats, courses |
-| `/about` | About MSBT (tabbed content) |
+| `/` | Home — hero, courses, globe, campus |
+| `/about` | About MSBT |
 | `/courses` | All programmes |
-| `/courses/[slug]` | Course detail + enquiry sidebar |
-| `/contact` | Contact Us form |
+| `/courses/:slug` | Course detail |
+| `/contact` | Contact form (mailto) |
 | `/university-progressions` | University pathways |
 
-## Content
+## Deploy (GitHub Pages + GoDaddy) — like Automexa
 
-Course data and site copy: `src/data/msbt.ts`
-
-## Build
-
-```bat
-npm run build
-npm start
-```
-
-## Deploy (GitHub + Vercel + GoDaddy)
-
-### 1. Push to GitHub (`msbt2026`)
+### 1. Push to GitHub
 
 ```powershell
 cd "e:\MSBT\msbt-main"
 .\deploy.ps1
 ```
 
-Or manually:
+### 2. Enable GitHub Pages
 
-```powershell
-git remote set-url origin https://github.com/studyextremeconsultltd-hub/msbt2026.git
-git push -u origin main
-```
+Repo → **Settings → Pages → Source: GitHub Actions**
 
-### 2. Deploy on Vercel
+Push to `main` runs `.github/workflows/deploy-pages.yml` and publishes `dist/`.
 
-1. Import [studyextremeconsultltd-hub/msbt2026](https://vercel.com/new/import?s=studyextremeconsultltd-hub/msbt2026)
-2. Framework: **Next.js** · Root directory: `./`
-3. Click **Deploy**
+### 3. Custom domain `msbt.co.uk`
 
-### 3. Connect GoDaddy domain (`msbt.co.uk`)
+GitHub Pages → Custom domain → `msbt.co.uk` (+ www if needed).
 
-**Vercel** → Settings → Domains → add `msbt.co.uk` and `www.msbt.co.uk`
-
-**GoDaddy** DNS:
+**GoDaddy DNS** (same pattern as Automexa → GitHub Pages):
 
 | Type | Name | Value |
 |------|------|--------|
-| A | `@` | `76.76.21.21` |
-| CNAME | `www` | `cname.vercel-dns.com` |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `studyextremeconsultltd-hub.github.io` |
 
-Delete any **WebsiteBuilder Site** record first.
+Remove old Vercel records (`cname.vercel-dns.com`, `76.76.21.21`, etc.).
+
+Forms use **mailto** (no server API) — same approach as Automexa.
