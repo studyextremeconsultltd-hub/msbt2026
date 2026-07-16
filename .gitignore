@@ -38,8 +38,9 @@ yarn-error.log*
 # vercel (legacy — project no longer uses Vercel)
 .vercel
 
-# local university source docs (content extracted to src/data)
+# local source dumps (not part of the site)
 University contents/
+Pics/
 
 # typescript
 *.tsbuildinfo
