@@ -31,7 +31,7 @@ export const site = {
   email: "naveed.rehman@msbt.co.uk",
   phone: "+447466065438",
   whatsapp: "+447466065438",
-  address: "Manchester, United Kingdom",
+  address: "Office 2.13 Business Centre, Devonshire St N, Manchester M12 6JH",
 };
 
 export const heroTabs = ["Admissions", "Research", "Faculty", "Courses"] as const;

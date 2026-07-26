@@ -11,9 +11,9 @@ const MANCHESTER: Pin = {
 };
 
 const MSBT_ADDRESS: Pin = {
-  lat: 53.4687522,
-  lng: -2.1964829,
-  text: "99 Clowes Street, M12 5FY",
+  lat: 53.4714,
+  lng: -2.2156,
+  text: "Office 2.13, Devonshire St N, M12 6JH",
 };
 
 const SATELLITE_STYLE: maplibregl.StyleSpecification = {

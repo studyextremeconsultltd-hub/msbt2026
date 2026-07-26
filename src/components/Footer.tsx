@@ -139,7 +139,7 @@ export default function Footer() {
             <p className="text-base font-bold leading-relaxed text-white/90 sm:text-lg">
               Company Registered in the United Kingdom.
               <br />
-              No: to be provided · VAT No: to be provided
+              No: to be provided
             </p>
             <p className="text-base font-bold leading-relaxed text-white/90 sm:text-lg">
               {site.name}
