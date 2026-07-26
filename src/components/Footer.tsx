@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import BackToTop from "@/components/BackToTop";
 import BrandLogo from "@/components/BrandLogo";
 import { site } from "@/data/msbt";
@@ -8,13 +8,13 @@ const exploreLinks = [
   { href: "/about", label: "About" },
   { href: "/courses", label: "Courses" },
   { href: "/university-progressions", label: "University Progressions" },
-  { href: "/about#vision-mission", label: "News" },
   { href: "/contact", label: "Contact Us" },
 ];
 
 const legalLinks = [
   { href: "/about#governance", label: "Terms & Conditions" },
   { href: "/courses", label: "Apply" },
+  { href: "/pay", label: "Pay online" },
 ];
 
 const socialLinks = [
@@ -39,7 +39,7 @@ const socialLinks = [
     ),
   },
   {
-    href: "https://wa.me/",
+    href: `https://wa.me/${site.whatsapp.replace(/\D/g, "")}`,
     label: "WhatsApp",
     bg: "bg-[#25D366]",
     icon: (
@@ -53,68 +53,39 @@ const socialLinks = [
 export default function Footer() {
   return (
     <>
-      <div className="bg-[#0066cc] py-5 ring-1 ring-gold/20">
-        <div className="mx-auto max-w-7xl px-4 text-center lg:px-8">
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange via-[#e87a35] to-navy py-5 shadow-[0_-8px_40px_rgba(232,108,42,0.25)]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,39,0.35),transparent_55%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 text-center lg:px-8">
           <Link
             to="/courses"
-            className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-white transition hover:text-white/90 sm:text-xl"
+            className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-white drop-shadow-md transition hover:scale-[1.02] hover:text-gold-light sm:text-xl"
           >
             Our Popular Online Courses
-            <ChevronDown className="h-6 w-6" strokeWidth={3} />
+            <ChevronDown className="h-6 w-6 animate-bounce" strokeWidth={3} />
           </Link>
         </div>
       </div>
 
-      <footer className="bg-navy-deep text-white">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10 lg:px-8 lg:py-14">
-          <div className="sm:col-span-2 lg:col-span-1">
-            <BrandLogo inverted size="sm" />
-            <p className="mt-4 text-sm font-medium text-white/70">
-              Professional online education rooted in Manchester.
-            </p>
-          </div>
-          <nav>
-            <h3 className="mb-4 text-base font-bold uppercase tracking-wider text-sky sm:text-lg">
-              Explore
-            </h3>
-            <ul className="space-y-3">
-              {exploreLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-base font-bold text-white/90 transition hover:text-sky sm:text-lg"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <footer className="relative overflow-hidden bg-navy-deep text-white">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
+        <div className="pointer-events-none absolute -left-24 top-16 h-64 w-64 rounded-full bg-orange/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 bottom-10 h-56 w-56 rounded-full bg-sky/10 blur-3xl" />
 
-          <div>
-            <h3 className="mb-4 text-base font-bold uppercase tracking-wider text-sky sm:text-lg">
-              Quick Links
-            </h3>
-            <ul className="space-y-3">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-base font-bold text-white/90 transition hover:text-sky sm:text-lg"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-5 flex items-center gap-3">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:px-8 lg:py-16">
+          <div className="lg:col-span-4">
+            <BrandLogo inverted size="sm" />
+            <p className="mt-5 max-w-sm text-base font-medium leading-relaxed text-white/75">
+              Professional online education rooted in Manchester — flexible pathways
+              from Level 3 to Level 7.
+            </p>
+            <div className="mt-6 flex items-center gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex h-11 w-11 items-center justify-center rounded-full ${social.bg} shadow-lg transition hover:scale-110 hover:brightness-110`}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full ${social.bg} shadow-lg ring-2 ring-white/10 transition hover:scale-110 hover:brightness-110`}
                   aria-label={social.label}
                 >
                   {social.icon}
@@ -123,36 +94,83 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-start">
-            <h3 className="mb-4 text-base font-bold uppercase tracking-wider text-sky sm:text-lg">
-              Security
+          <nav className="lg:col-span-2">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
+              Explore
             </h3>
-            <div className="rounded-xl border border-white/20 bg-white/5 px-5 py-4 text-sm font-bold leading-relaxed text-white/90 sm:text-base">
-              This site is protected by Trustwave&apos;s Trusted Commerce program
-            </div>
-          </div>
+            <ul className="space-y-3">
+              {exploreLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
+                    className="text-base font-semibold text-white/90 transition hover:text-sky"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-          <div className="space-y-4 sm:col-span-2 lg:col-span-1">
-            <h3 className="text-base font-bold uppercase tracking-wider text-sky sm:text-lg">
+          <nav className="lg:col-span-2">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
+                    className="text-base font-semibold text-white/90 transition hover:text-sky"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="sm:col-span-2 lg:col-span-4">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
               Registered Office
             </h3>
-            <p className="text-base font-bold leading-relaxed text-white/90 sm:text-lg">
-              Company Registered in the United Kingdom.
-              <br />
-              No: to be provided
-            </p>
-            <p className="text-base font-bold leading-relaxed text-white/90 sm:text-lg">
-              {site.name}
-              <br />
-              {site.address}
-            </p>
+            <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-white/10 to-white/[0.03] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10 backdrop-blur-sm">
+              <p className="font-display text-lg font-bold text-white">{site.name}</p>
+              <p className="mt-1 text-sm font-medium text-gold-light">
+                Company registered in the United Kingdom
+              </p>
+              <div className="mt-4 flex gap-3">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange/90 text-white shadow-md">
+                  <MapPin size={18} aria-hidden />
+                </span>
+                <p className="text-base font-semibold leading-relaxed text-white/95">
+                  {site.address}
+                </p>
+              </div>
+              <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="flex items-center gap-2 text-sm font-semibold text-white/85 transition hover:text-sky"
+                >
+                  <Mail size={16} className="text-sky" aria-hidden />
+                  {site.email}
+                </a>
+                <a
+                  href={`tel:${site.phone}`}
+                  className="flex items-center gap-2 text-sm font-semibold text-white/85 transition hover:text-sky"
+                >
+                  <Phone size={16} className="text-sky" aria-hidden />
+                  {site.phone}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-white/15">
+        <div className="relative border-t border-white/10 bg-black/20">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 sm:flex-row lg:px-8">
-            <p className="text-center text-base font-bold text-white/80 sm:text-left sm:text-lg">
-              © {new Date().getFullYear()} {site.name}. All rights reserved.
+            <p className="text-center text-sm font-semibold text-white/70 sm:text-left sm:text-base">
+              © {new Date().getFullYear()} {site.shortName}. All rights reserved.
             </p>
             <BackToTop />
           </div>
