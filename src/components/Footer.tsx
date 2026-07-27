@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:px-8 lg:py-16">
           <div className="lg:col-span-4">
-            <BrandLogo inverted size="sm" />
+            <BrandLogo inverted size="md" />
             <p className="mt-5 max-w-sm text-base font-medium leading-relaxed text-white/75">
               Professional online education rooted in Manchester — flexible pathways
               from Level 3 to Level 7.

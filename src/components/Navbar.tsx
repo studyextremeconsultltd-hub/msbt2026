@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { CreditCard, Menu, Sparkles, X } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 
 const links = [
@@ -32,62 +32,91 @@ export default function Navbar({
           : "sticky top-0 border-b border-gold/20 bg-white/95 backdrop-blur-md"
       } z-50 ${className}`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8 lg:py-3.5">
-        <BrandLogo overlay={overlay} size="lg" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 lg:px-8 lg:py-4">
+          <BrandLogo overlay={overlay} size="xl" />
 
-        <nav className="hidden items-center gap-6 md:flex lg:gap-10">
-          {links.map((l) => (
-            <Link key={l.label} to={l.href} className={navLinkClass(overlay)}>
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+          <nav className="hidden items-center gap-5 md:flex lg:gap-8">
+            {links.map((l) => (
+              <Link key={l.label} to={l.href} className={navLinkClass(overlay)}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/courses"
-            className="hidden rounded-full bg-orange px-5 py-2.5 text-sm font-bold text-white shadow-md ring-2 ring-gold/30 transition hover:bg-orange/90 sm:inline-flex"
-          >
-            Enquire Now
-          </Link>
-          <button
-            type="button"
-            className={`rounded-lg p-2 md:hidden ${overlay ? "on-image-text" : "text-ink"}`}
-            onClick={() => setOpen(!open)}
-            aria-label="Menu"
-          >
-            {open ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {open && (
-        <div
-          className={`border-t px-4 py-4 md:hidden ${
-            overlay ? "border-gold/20 bg-navy/95 backdrop-blur-sm" : "border-line bg-white"
-          }`}
-        >
-          {links.map((l) => (
+          <div className="flex items-center gap-2.5">
             <Link
-              key={l.label}
-              to={l.href}
-              className={`block py-2.5 text-base font-bold ${
-                overlay ? "text-white" : "text-ink"
-              }`}
+              to="/courses"
+              className="hidden rounded-full bg-orange px-4 py-2.5 text-sm font-bold text-white shadow-md ring-2 ring-gold/30 transition hover:bg-orange/90 lg:inline-flex"
+            >
+              Enquire Now
+            </Link>
+            <Link
+              to="/pay"
+              className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-gold via-orange to-teal px-3 py-1.5 text-white shadow-[0_7px_22px_rgba(232,108,42,0.5)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-[0_10px_28px_rgba(26,107,107,0.55)] sm:inline-flex"
+              aria-label="Pay course fees securely with Stripe"
+            >
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+              <span className="relative flex items-center gap-2">
+                <span className="relative rounded-full bg-white/20 p-1">
+                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-white ring-2 ring-orange" />
+                  <CreditCard className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span className="text-left leading-tight">
+                  <span className="flex items-center gap-1 text-xs font-black uppercase tracking-wide">
+                    Pay Now <Sparkles className="h-3 w-3 animate-pulse" aria-hidden="true" />
+                  </span>
+                  <span className="text-[9px] font-semibold text-white/90">
+                    Secure checkout
+                  </span>
+                </span>
+              </span>
+            </Link>
+            <button
+              type="button"
+              className={`rounded-lg p-2 md:hidden ${overlay ? "on-image-text" : "text-ink"}`}
+              onClick={() => setOpen(!open)}
+              aria-label="Menu"
+            >
+              {open ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+
+        {open && (
+          <div
+            className={`border-t px-4 py-4 md:hidden ${
+              overlay ? "border-gold/20 bg-navy/95 backdrop-blur-sm" : "border-line bg-white"
+            }`}
+          >
+            {links.map((l) => (
+              <Link
+                key={l.label}
+                to={l.href}
+                className={`block py-2.5 text-base font-bold ${
+                  overlay ? "text-white" : "text-ink"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <Link
+              to="/pay"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold via-orange to-teal px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg"
               onClick={() => setOpen(false)}
             >
-              {l.label}
+              <CreditCard className="h-5 w-5" />
+              Pay Now — Secure Stripe Checkout
             </Link>
-          ))}
-          <Link
-            to="/courses"
-            className="mt-3 block rounded-full bg-orange px-5 py-3 text-center text-sm font-bold text-white"
-            onClick={() => setOpen(false)}
-          >
-            Enquire Now
-          </Link>
-        </div>
-      )}
+            <Link
+              to="/courses"
+              className="mt-3 block rounded-full border border-orange bg-white px-5 py-3 text-center text-sm font-bold text-orange"
+              onClick={() => setOpen(false)}
+            >
+              Enquire Now
+            </Link>
+          </div>
+        )}
     </header>
   );
 }
