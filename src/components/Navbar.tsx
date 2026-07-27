@@ -32,8 +32,8 @@ export default function Navbar({
           : "sticky top-0 border-b border-gold/20 bg-white/95 backdrop-blur-md"
       } z-50 ${className}`}
     >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 lg:px-8 lg:py-4">
-          <BrandLogo overlay={overlay} size="xl" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-3.5">
+          <BrandLogo overlay={overlay} size="lg" />
 
           <nav className="hidden items-center gap-5 md:flex lg:gap-8">
             {links.map((l) => (
@@ -52,7 +52,7 @@ export default function Navbar({
             </Link>
             <Link
               to="/pay"
-              className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-gold via-orange to-teal px-3 py-1.5 text-white shadow-[0_7px_22px_rgba(232,108,42,0.5)] ring-2 ring-white/40 transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-[0_10px_28px_rgba(26,107,107,0.55)] sm:inline-flex"
+              className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-navy via-[#2a3544] to-gold px-3 py-1.5 text-white shadow-[0_7px_22px_rgba(26,35,46,0.4)] ring-2 ring-gold/40 transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-[0_10px_28px_rgba(197,160,89,0.45)] sm:inline-flex"
               aria-label="Pay course fees securely with Stripe"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
@@ -102,7 +102,7 @@ export default function Navbar({
             ))}
             <Link
               to="/pay"
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold via-orange to-teal px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-navy via-[#2a3544] to-gold px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg"
               onClick={() => setOpen(false)}
             >
               <CreditCard className="h-5 w-5" />

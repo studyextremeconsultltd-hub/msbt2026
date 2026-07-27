@@ -5,19 +5,15 @@ type BrandLogoProps = {
   overlay?: boolean;
   inverted?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
-  /** Extra wordmark — off by default; file already includes the school name */
   showText?: boolean;
 };
 
-/**
- * Horizontal wordmark. Display sizes are intentionally large so the
- * crest + serif name stay readable in the nav and hero.
- */
+/** Balanced header mark — readable, not oversized (~2.4:1 wordmark) */
 const sizes = {
-  sm: { h: 64, w: 176, text: "text-xs leading-tight", label: "max-w-[8rem]" },
-  md: { h: 80, w: 220, text: "text-sm leading-tight", label: "max-w-[10rem]" },
-  lg: { h: 96, w: 280, text: "text-sm leading-tight", label: "max-w-[11rem]" },
-  xl: { h: 112, w: 320, text: "text-base leading-tight", label: "max-w-[12rem]" },
+  sm: { h: 48, w: 132 },
+  md: { h: 56, w: 154 },
+  lg: { h: 64, w: 176 },
+  xl: { h: 72, w: 200 },
 };
 
 export default function BrandLogo({
@@ -32,14 +28,13 @@ export default function BrandLogo({
   return (
     <Link
       to="/"
-      className="group flex items-center gap-3 transition hover:opacity-95"
+      className="group flex items-center gap-2.5 transition hover:opacity-95"
       aria-label={`${site.name} — Home`}
     >
       <div
-        className="relative shrink-0 overflow-hidden rounded-2xl bg-[#f7f7f7] shadow-[0_10px_32px_rgba(15,31,61,0.22)] ring-[3px] ring-gold/55 transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_16px_40px_rgba(201,162,39,0.4)] group-hover:ring-gold"
-        style={{ width: s.w, height: s.h }}
+        className="relative shrink-0 overflow-hidden rounded-xl bg-[#f7f5f0] shadow-[0_6px_20px_rgba(26,35,46,0.14)] ring-2 ring-gold/45 transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_28px_rgba(197,160,89,0.28)] group-hover:ring-gold"
+        style={{ width: s.w, height: s.h, maxWidth: "46vw" }}
       >
-        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-br from-gold/20 via-transparent to-navy/5" />
         <img
           src="/brand/msbt-logo.png"
           alt={`${site.name} logo`}
@@ -51,14 +46,9 @@ export default function BrandLogo({
         />
       </div>
       {showText && (
-        <div className={`${s.label} min-w-0`}>
-          <p className={`font-display font-bold tracking-tight ${s.text} ${textClass}`}>
-            {site.shortName}
-          </p>
-          <p className={`mt-0.5 font-semibold leading-snug text-[11px] ${textClass} opacity-80 sm:text-xs`}>
-            Manchester School of Business and Technology
-          </p>
-        </div>
+        <p className={`hidden font-display text-sm font-bold tracking-tight sm:block ${textClass}`}>
+          {site.shortName}
+        </p>
       )}
     </Link>
   );

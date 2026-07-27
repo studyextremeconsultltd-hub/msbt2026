@@ -53,8 +53,8 @@ const socialLinks = [
 export default function Footer() {
   return (
     <>
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange via-[#e87a35] to-navy py-5 shadow-[0_-8px_40px_rgba(232,108,42,0.25)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,39,0.35),transparent_55%)]" />
+      <div className="relative overflow-hidden bg-gradient-to-r from-navy via-[#2a3544] to-gold py-5 shadow-[0_-8px_40px_rgba(26,35,46,0.28)]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(197,160,89,0.35),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl px-4 text-center lg:px-8">
           <Link
             to="/courses"
@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:px-8 lg:py-16">
           <div className="lg:col-span-4">
-            <BrandLogo inverted size="md" />
+            <BrandLogo inverted size="sm" />
             <p className="mt-5 max-w-sm text-base font-medium leading-relaxed text-white/75">
               Professional online education rooted in Manchester — flexible pathways
               from Level 3 to Level 7.

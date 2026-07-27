@@ -4,19 +4,20 @@
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-display: var(--font-cormorant), Georgia, serif;
 
-  --color-cream: #fff8f3;
-  --color-peach: #f5c9a8;
-  --color-peach-deep: #e8a87c;
-  --color-ink: #0a1628;
-  --color-navy: #0f1f3d;
-  --color-navy-deep: #0a1628;
-  --color-gold: #c9a227;
-  --color-gold-light: #e8c547;
-  --color-sky: #5eb8e8;
-  --color-teal: #1a6b6b;
-  --color-orange: #e86c2a;
-  --color-muted: #5a6478;
-  --color-line: #e8e2dc;
+  /* Palette aligned to MSBT logo: navy + metallic gold */
+  --color-cream: #f7f5f0;
+  --color-peach: #ebe4d6;
+  --color-peach-deep: #d4b87a;
+  --color-ink: #1a232e;
+  --color-navy: #1a232e;
+  --color-navy-deep: #121820;
+  --color-gold: #c5a059;
+  --color-gold-light: #d4b87a;
+  --color-sky: #6b8cae;
+  --color-teal: #3d5a6c;
+  --color-orange: #b8914a;
+  --color-muted: #5c6570;
+  --color-line: #e5e1da;
   --color-white: #ffffff;
 }
 
@@ -43,7 +44,7 @@ body {
 }
 
 .brand-gradient {
-  background: linear-gradient(135deg, var(--color-navy) 0%, #1a3060 50%, var(--color-navy-deep) 100%);
+  background: linear-gradient(135deg, var(--color-navy) 0%, #2a3544 48%, var(--color-navy-deep) 100%);
 }
 
 @keyframes float-soft {
