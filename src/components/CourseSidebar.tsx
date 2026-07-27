@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CreditCard, LoaderCircle, LockKeyhole, Sparkles } from "lucide-react";
 import type { Course } from "@/data/msbt";
 import {
   courseListForEnquiry,
@@ -6,6 +7,7 @@ import {
   saveAmount,
   site,
 } from "@/data/msbt";
+import { startStripeCheckout } from "@/lib/checkout";
 
 type PaymentOption = "fast" | "full" | "instalment";
 
@@ -16,15 +18,45 @@ export default function CourseSidebar({ course }: { course: Course }) {
   const [selectedCourse, setSelectedCourse] = useState(course.slug);
   const [payment, setPayment] = useState<PaymentOption>("fast");
   const [submitted, setSubmitted] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
 
   const { pricing } = course;
   const save = saveAmount(pricing);
   const allCourses = courseListForEnquiry();
+  const checkoutResult = new URLSearchParams(window.location.search).get("checkout");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !email.trim()) return;
     setSubmitted(true);
+  }
+
+  async function handleCheckout() {
+    setCheckoutError("");
+    if (!email.trim() || !email.includes("@")) {
+      setCheckoutError("Enter your email address in the enquiry form before paying.");
+      document.getElementById("course-enquiry-email")?.focus();
+      return;
+    }
+
+    setCheckoutLoading(true);
+    try {
+      const checkoutUrl = await startStripeCheckout({
+        courseSlug: course.slug,
+        paymentOption: payment === "instalment" ? "deposit" : "full",
+        customerEmail: email.trim(),
+        customerName: name.trim(),
+      });
+      window.location.assign(checkoutUrl);
+    } catch (error) {
+      setCheckoutError(
+        error instanceof Error
+          ? error.message
+          : "Secure checkout is unavailable right now.",
+      );
+      setCheckoutLoading(false);
+    }
   }
 
   return (
@@ -70,6 +102,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
+                id="course-enquiry-email"
                 required
                 type="email"
                 value={email}
@@ -138,6 +171,16 @@ export default function CourseSidebar({ course }: { course: Course }) {
           <h3 className="font-semibold text-white">Enrol Now</h3>
         </div>
         <div className="space-y-4 p-5">
+          {checkoutResult === "success" && (
+            <p className="rounded-xl border border-teal/20 bg-teal/10 p-3 text-sm font-medium text-teal">
+              Stripe checkout completed. MSBT Admissions will confirm your payment shortly.
+            </p>
+          )}
+          {checkoutResult === "cancel" && (
+            <p className="rounded-xl border border-orange/20 bg-orange/10 p-3 text-sm text-ink">
+              Checkout was cancelled. No payment was taken—you can try again below.
+            </p>
+          )}
           <p className="text-sm font-medium text-ink">Course Options</p>
           {(
             [
@@ -172,20 +215,44 @@ export default function CourseSidebar({ course }: { course: Course }) {
               </span>
             )}
           </div>
+          {checkoutError && (
+            <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+              {checkoutError}
+            </p>
+          )}
           <button
             type="button"
-            className="w-full rounded-xl bg-gradient-to-r from-teal to-sky py-2.5 text-sm font-semibold text-white"
+            onClick={handleCheckout}
+            disabled={checkoutLoading}
+            className="group relative isolate w-full overflow-hidden rounded-2xl bg-gradient-to-r from-orange via-[#ff7a18] to-teal px-5 py-4 text-white shadow-[0_12px_30px_rgba(239,108,0,0.32)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(0,122,120,0.35)] focus:outline-none focus-visible:ring-4 focus-visible:ring-orange/30 disabled:cursor-wait disabled:opacity-70"
           >
-            Enrol Now
-          </button>
-          <button
-            type="button"
-            className="w-full rounded-xl bg-gradient-to-r from-teal to-sky py-2.5 text-sm font-semibold text-white"
-          >
-            Flexible Payment
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            <span className="relative flex items-center justify-center gap-3">
+              {checkoutLoading ? (
+                <LoaderCircle className="h-6 w-6 animate-spin" aria-hidden="true" />
+              ) : (
+                <CreditCard className="h-6 w-6" aria-hidden="true" />
+              )}
+              <span className="text-left">
+                <span className="flex items-center gap-1.5 text-base font-extrabold tracking-wide">
+                  {checkoutLoading
+                    ? "Preparing Checkout…"
+                    : payment === "instalment"
+                      ? `Pay ${formatGBP(pricing.deposit)} Deposit`
+                      : `Pay Now — ${formatGBP(pricing.discounted)}`}
+                  {!checkoutLoading && <Sparkles className="h-4 w-4" aria-hidden="true" />}
+                </span>
+                <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/90">
+                  <LockKeyhole className="h-3 w-3" aria-hidden="true" />
+                  Secure checkout powered by Stripe
+                </span>
+              </span>
+            </span>
           </button>
           <p className="text-center text-xs text-muted">
-            Enrolment is enquiry-only at launch — no live checkout yet.
+            {payment === "instalment"
+              ? "Pay the initial deposit securely. Admissions will arrange the remaining monthly instalments."
+              : "You will be redirected to Stripe to complete your card payment."}
           </p>
         </div>
       </div>

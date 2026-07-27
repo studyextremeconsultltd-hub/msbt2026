@@ -6,6 +6,7 @@ import Courses from "@/pages/Courses";
 import CourseDetail from "@/pages/CourseDetail";
 import Contact from "@/pages/Contact";
 import UniversityProgressions from "@/pages/UniversityProgressions";
+import Pay from "@/pages/Pay";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -25,6 +26,7 @@ function AppShell() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/:slug" element={<CourseDetail />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/pay" element={<Pay />} />
         <Route path="/university-progressions" element={<UniversityProgressions />} />
       </Routes>
     </>
