@@ -26,6 +26,7 @@ export type Course = {
 export const site = {
   name: "Manchester School of Business and Technology",
   shortName: "MSBT",
+  slogan: "EDUCATE - EMPOWER - EXCEL",
   tagline:
     "Your career, your pace, your future. Study business, health & social care and psychology online, on your schedule.",
   email: "naveed.rehman@msbt.co.uk",

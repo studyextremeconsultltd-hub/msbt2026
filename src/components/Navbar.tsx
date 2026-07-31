@@ -32,7 +32,7 @@ export default function Navbar({
           : "sticky top-0 border-b border-gold/20 bg-white/95 backdrop-blur-md"
       } z-50 ${className}`}
     >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-8 lg:py-3.5">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 lg:px-8 lg:py-3">
           <BrandLogo overlay={overlay} size="lg" />
 
           <nav className="hidden items-center gap-5 md:flex lg:gap-8">

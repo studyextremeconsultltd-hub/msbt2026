@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { site } from "@/data/msbt";
 import AnimatedSchoolTitle from "@/components/AnimatedSchoolTitle";
+import BrandSlogan from "@/components/BrandSlogan";
 import HeroEnquiryForm from "@/components/HeroEnquiryForm";
 import HeroImageSlider from "@/components/HeroImageSlider";
 import { HeroSideCourseColumn } from "@/components/HeroSideCourses";
@@ -21,10 +22,12 @@ export default function Hero() {
               transition={{ duration: 0.6 }}
               className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
             >
-              <span className="bg-gradient-to-r from-navy via-[#2a3d7a] to-orange bg-clip-text text-transparent drop-shadow-sm">
+              <span className="bg-gradient-to-r from-navy via-[#2a3544] to-gold bg-clip-text text-transparent drop-shadow-sm">
                 Welcome to {site.shortName}
               </span>
             </motion.p>
+
+            <BrandSlogan variant="hero" />
 
             <motion.div
               initial={{ opacity: 0, y: 16 }}
