@@ -22,14 +22,24 @@
     <meta property="og:url" content="https://msbt.co.uk/" />
     <meta property="og:image" content="https://msbt.co.uk/brand/msbt-logo.webp" />
 
-    <!-- LCP hero image — no third-party font blocking -->
+    <!-- Mobile LCP image (small WebP) + desktop fallback preload -->
+    <link
+      rel="preload"
+      as="image"
+      href="/manchester/manchester-spinningfields-sm.webp"
+      type="image/webp"
+      media="(max-width: 767px)"
+      fetchpriority="high"
+    />
     <link
       rel="preload"
       as="image"
       href="/manchester/manchester-spinningfields.webp"
+      type="image/webp"
+      media="(min-width: 768px)"
       fetchpriority="high"
     />
-    <link rel="preload" as="image" href="/brand/msbt-logo.webp" />
+    <link rel="preload" as="image" href="/brand/msbt-logo-sm.webp" type="image/webp" />
 
     <title>MSBT | Manchester School of Business and Technology</title>
     <style>

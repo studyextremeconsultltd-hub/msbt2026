@@ -1,12 +1,17 @@
 import { lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import { CourseGrid, LightStudentScene } from "@/components/CourseSections";
-import Footer from "@/components/Footer";
 import DeferredMount from "@/components/DeferredMount";
 
+const CourseGrid = lazy(() =>
+  import("@/components/CourseSections").then((m) => ({ default: m.CourseGrid })),
+);
+const LightStudentScene = lazy(() =>
+  import("@/components/CourseSections").then((m) => ({ default: m.LightStudentScene })),
+);
 const ExploreMSBT = lazy(() => import("@/components/ExploreMSBT"));
 const CitySkylineBanner = lazy(() => import("@/components/CitySkylineBanner"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 function SectionFallback({ height }: { height: number }) {
   return (
@@ -14,9 +19,7 @@ function SectionFallback({ height }: { height: number }) {
       className="mx-auto flex max-w-7xl items-center justify-center bg-cream text-sm font-semibold text-muted"
       style={{ minHeight: height }}
       aria-hidden
-    >
-      Loading…
-    </div>
+    />
   );
 }
 
@@ -27,25 +30,36 @@ export default function Home() {
         <Hero />
         <Navbar overlay />
       </div>
-      <CourseGrid limit={6} />
 
-      <DeferredMount minHeight={480} rootMargin="120px 0px">
-        <LightStudentScene />
+      <DeferredMount minHeight={640} rootMargin="80px 0px">
+        <Suspense fallback={<SectionFallback height={640} />}>
+          <CourseGrid limit={3} />
+        </Suspense>
       </DeferredMount>
 
-      <DeferredMount minHeight={420} rootMargin="160px 0px">
+      <DeferredMount minHeight={420} rootMargin="120px 0px">
         <Suspense fallback={<SectionFallback height={420} />}>
+          <LightStudentScene />
+        </Suspense>
+      </DeferredMount>
+
+      <DeferredMount minHeight={360} rootMargin="140px 0px">
+        <Suspense fallback={<SectionFallback height={360} />}>
           <ExploreMSBT />
         </Suspense>
       </DeferredMount>
 
-      <DeferredMount minHeight={420} rootMargin="160px 0px">
-        <Suspense fallback={<SectionFallback height={420} />}>
+      <DeferredMount minHeight={360} rootMargin="140px 0px">
+        <Suspense fallback={<SectionFallback height={360} />}>
           <CitySkylineBanner />
         </Suspense>
       </DeferredMount>
 
-      <Footer />
+      <DeferredMount minHeight={320} rootMargin="100px 0px">
+        <Suspense fallback={<SectionFallback height={320} />}>
+          <Footer />
+        </Suspense>
+      </DeferredMount>
     </main>
   );
 }

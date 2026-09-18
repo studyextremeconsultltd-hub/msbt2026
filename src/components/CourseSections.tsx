@@ -97,12 +97,13 @@ export function CourseGrid({ limit }: { limit?: number }) {
             >
               <div className="relative h-52 sm:h-56">
                 <img
-                  src={cat.image}
+                  src={cat.image.replace(/\.webp$/, "-sm.webp")}
                   alt={cat.title}
-                  width={800}
-                  height={448}
+                  width={640}
+                  height={360}
                   loading="lazy"
                   decoding="async"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-navy/30" />
@@ -129,12 +130,13 @@ export function CourseGrid({ limit }: { limit?: number }) {
             >
               <div className="relative h-44 sm:h-48">
                 <img
-                  src={c.image}
+                  src={c.image.replace(/\.webp$/, "-sm.webp")}
                   alt={c.title}
-                  width={800}
-                  height={384}
+                  width={640}
+                  height={360}
                   loading="lazy"
                   decoding="async"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-navy/25" />

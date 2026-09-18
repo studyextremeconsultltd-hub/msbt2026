@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 
 export type SlideItem = {
   src: string;
+  /** Optional smaller image for mobile (srcset) */
+  srcSm?: string;
   alt: string;
   caption: string;
 };
@@ -13,12 +15,12 @@ type ImageBannerSliderProps = {
   className?: string;
 };
 
-const INTERVAL_MS = 6500;
+const INTERVAL_MS = 7000;
 
 const variantStyles = {
   hero: {
     wrapper: "max-w-7xl",
-    aspect: "aspect-[16/7] max-h-[280px] sm:max-h-[340px] md:max-h-[400px] lg:max-h-[440px]",
+    aspect: "aspect-[16/9] max-h-[220px] sm:aspect-[16/7] sm:max-h-[340px] md:max-h-[400px] lg:max-h-[440px]",
     caption: "text-sm font-bold sm:text-base md:text-lg",
     arrow: "h-10 w-10 sm:h-11 sm:w-11",
     arrowIcon: 22,
@@ -28,7 +30,7 @@ const variantStyles = {
   },
   showcase: {
     wrapper: "max-w-7xl",
-    aspect: "aspect-[16/9] h-[280px] sm:h-[360px] md:h-[440px] lg:h-[480px]",
+    aspect: "aspect-[16/9] h-[220px] sm:h-[360px] md:h-[420px]",
     caption: "text-base font-bold sm:text-lg md:text-xl",
     arrow: "h-11 w-11 sm:h-12 sm:w-12",
     arrowIcon: 24,
@@ -45,6 +47,8 @@ export default function ImageBannerSlider({
 }: ImageBannerSliderProps) {
   const [index, setIndex] = useState(0);
   const styles = variantStyles[variant];
+  const slide = slides[index];
+  const nextIndex = (index + 1) % slides.length;
 
   const next = useCallback(() => {
     setIndex((i) => (i + 1) % slides.length);
@@ -61,28 +65,38 @@ export default function ImageBannerSlider({
     return () => clearInterval(id);
   }, [next, slides.length]);
 
-  const slide = slides[index];
+  // Warm the next slide without keeping every image in the DOM.
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const upcoming = slides[nextIndex];
+    const href = upcoming.srcSm || upcoming.src;
+    const img = new Image();
+    img.decoding = "async";
+    img.src = href;
+  }, [nextIndex, slides]);
 
   return (
     <div
       className={`relative mx-auto ${styles.wrapper} overflow-hidden rounded-3xl border border-line bg-white shadow-[0_16px_40px_rgba(26,35,46,0.08)] ring-1 ring-gold/15 ${className}`}
     >
       <div className={`relative w-full ${styles.aspect}`}>
-        {slides.map((item, i) => (
+        <picture>
+          {slide.srcSm ? (
+            <source media="(max-width: 767px)" srcSet={slide.srcSm} type="image/webp" />
+          ) : null}
           <img
-            key={item.src}
-            src={item.src}
-            alt={item.alt}
+            key={slide.src}
+            src={slide.src}
+            alt={slide.alt}
             width={1600}
             height={700}
-            decoding={i === 0 ? "sync" : "async"}
-            fetchPriority={i === 0 && variant === "hero" ? "high" : "low"}
-            loading={i === 0 && variant === "hero" ? "eager" : "lazy"}
-            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${
-              i === index ? "opacity-100" : "pointer-events-none opacity-0"
-            }`}
+            decoding="async"
+            fetchPriority={variant === "hero" && index === 0 ? "high" : "low"}
+            loading={variant === "hero" && index === 0 ? "eager" : "lazy"}
+            sizes="(max-width: 768px) 100vw, 1200px"
+            className="absolute inset-0 h-full w-full object-cover object-center"
           />
-        ))}
+        </picture>
 
         <div className="hero-mirror-overlay" />
         <div className="hero-mirror-shine" />
@@ -138,16 +152,19 @@ export default function ImageBannerSlider({
 export const manchesterSlides = [
   {
     src: "/manchester/manchester-spinningfields.webp",
+    srcSm: "/manchester/manchester-spinningfields-sm.webp",
     alt: "Manchester Spinningfields business district skyline",
     caption: "Manchester — a global hub for business & innovation",
   },
   {
     src: "/manchester/manchester-waterfront.webp",
+    srcSm: "/manchester/manchester-waterfront-sm.webp",
     alt: "Manchester waterfront and MediaCityUK",
     caption: "Study from anywhere — rooted in a world-class city",
   },
   {
     src: "/manchester/manchester-hero.webp",
+    srcSm: "/manchester/manchester-hero-sm.webp",
     alt: "Manchester city skyline at golden hour",
     caption: "Flexible online learning with professional accreditation",
   },
@@ -156,6 +173,7 @@ export const manchesterSlides = [
 export const campusSlides = [
   {
     src: "/manchester/campus-01.webp",
+    srcSm: "/manchester/campus-01-sm.webp",
     alt: "Universal Square Manchester — landscaped courtyard and modern office buildings",
     caption: "Universal Square, Manchester — where ambition meets opportunity",
   },

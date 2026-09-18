@@ -39,15 +39,18 @@ export default function BrandLogo({
           className="relative w-full overflow-hidden rounded-xl bg-[#f7f5f0] shadow-[0_6px_20px_rgba(26,35,46,0.14)] ring-2 ring-gold/45 transition duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_28px_rgba(197,160,89,0.28)] group-hover:ring-gold"
           style={{ height: s.h }}
         >
-          <img
-            src="/brand/msbt-logo.webp"
-            alt={`${site.name} logo`}
-            width={s.w}
-            height={s.h}
-            className="h-full w-full object-contain object-center p-1"
-            decoding="async"
-            fetchPriority="high"
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet="/brand/msbt-logo-sm.webp" type="image/webp" />
+            <img
+              src="/brand/msbt-logo.webp"
+              alt={`${site.name} logo`}
+              width={s.w}
+              height={s.h}
+              className="h-full w-full object-contain object-center p-1"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </picture>
         </div>
         {showText && (
           <p className={`hidden shrink-0 font-display text-sm font-bold tracking-tight sm:block ${textClass}`}>
