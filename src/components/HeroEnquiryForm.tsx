@@ -75,7 +75,7 @@ export default function HeroEnquiryForm() {
   return (
     <div className="relative mx-auto mt-8 w-full max-w-2xl">
       <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
-        <div className="relative border-b border-line bg-gradient-to-r from-cream via-white to-peach px-6 py-6 sm:px-8 sm:py-7">
+        <div className="relative border-b border-line bg-white px-6 py-6 sm:px-8 sm:py-7">
           <div className="relative flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-navy/10 ring-2 ring-gold/30">
               <GraduationCap className="text-orange" size={28} />

@@ -13,7 +13,7 @@ export default function Hero() {
     <section className="overflow-hidden">
       <HeroImageSlider />
 
-      <div className="relative bg-cream px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <div className="relative bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mx-auto flex max-w-[90rem] items-start justify-center gap-4 lg:gap-6 xl:gap-8">
           <HeroSideCourseColumn side="left" />
 
@@ -31,7 +31,7 @@ export default function Hero() {
                 Your career, your pace, your future.
               </p>
               <p className="mt-3 text-sm font-semibold leading-relaxed text-muted sm:mt-4 sm:text-lg md:text-xl">
-                Study business, health &amp; social care and psychology online, on your schedule,
+                Study Business &amp; Management and Health &amp; Social Care online, on your schedule,
                 without putting your life on hold.
               </p>
               <h1 className="mt-5 font-display text-lg font-bold leading-snug text-navy sm:mt-6 sm:text-2xl md:text-3xl">

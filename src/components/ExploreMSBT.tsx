@@ -17,7 +17,7 @@ export default function ExploreMSBT() {
   }
 
   return (
-    <section className="bg-cream">
+    <section className="bg-white">
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-10">
         <form
           onSubmit={handleSearch}
@@ -57,7 +57,7 @@ export default function ExploreMSBT() {
             <button
               type="button"
               onClick={() => setMapReady(true)}
-              className="flex h-[320px] w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-white via-cream to-peach px-6 text-center transition hover:brightness-[0.98] md:h-[420px]"
+              className="flex h-[320px] w-full flex-col items-center justify-center gap-3 bg-white px-6 text-center transition hover:bg-[#fafafa] md:h-[420px]"
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white shadow-lg">
                 <MapPin size={28} aria-hidden />

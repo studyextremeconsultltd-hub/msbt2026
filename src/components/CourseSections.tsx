@@ -21,8 +21,8 @@ export function LightStudentScene() {
             Join a global community of professionals
           </h2>
           <p className="mt-4 text-base font-medium leading-relaxed text-muted sm:text-lg md:text-xl">
-            Study business, health & social care, or psychology — with animated
-            cohort support, 24/7 portal access, and pathways from Level 3 to Level 7.
+            Study Business &amp; Management or Health &amp; Social Care — with tutor
+            support, 24/7 portal access, and pathways from Level 3 to Level 7.
           </p>
           <div className="mt-6 flex -space-x-3">
             {[1, 2, 3, 4].map((n) => (
@@ -88,12 +88,12 @@ export function CourseGrid({ limit }: { limit?: number }) {
           </Link>
         </div>
 
-        <div className="mb-12 grid gap-6 md:grid-cols-3">
+        <div className="mb-12 grid gap-6 md:grid-cols-2">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               to={`/courses?category=${cat.id}`}
-              className="group overflow-hidden rounded-3xl border border-line bg-cream card-shadow transition hover:-translate-y-1"
+              className="group overflow-hidden rounded-3xl border border-line bg-white card-shadow transition hover:-translate-y-1"
             >
               <div className="relative h-52 sm:h-56">
                 <img
@@ -126,7 +126,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
             <Link
               key={c.slug}
               to={`/courses/${c.slug}`}
-              className="group overflow-hidden rounded-2xl border border-line bg-cream transition hover:border-navy/30 hover:card-shadow"
+              className="group overflow-hidden rounded-2xl border border-line bg-white transition hover:border-navy/30 hover:card-shadow"
             >
               <div className="relative h-44 sm:h-48">
                 <img

@@ -9,45 +9,57 @@ export default function Courses() {
   const q = searchParams.get("q")?.toLowerCase();
 
   let list = courses;
-  if (cat) list = list.filter((c) => c.category === cat);
+  if (cat === "psychology") {
+    list = [];
+  } else if (cat) {
+    list = list.filter((c) => c.category === cat);
+  }
   if (q) list = list.filter((c) => c.title.toLowerCase().includes(q));
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       <Navbar />
-      <section className="bg-peach/40 py-14">
+      <section className="border-b border-line bg-white py-14">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <h1 className="font-display text-4xl font-bold text-ink">All Courses</h1>
           <p className="mt-3 text-muted">
-            Business & Management · Health & Social Care · Psychology
+            Business &amp; Management · Health &amp; Social Care
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <Link
               to="/courses"
-              className={`rounded-full px-4 py-2 text-sm font-medium ${
-                !cat ? "bg-navy text-white" : "bg-white text-ink"
+              className={`rounded-full px-5 py-2.5 text-sm font-bold transition ${
+                !cat || cat === "psychology"
+                  ? "bg-navy text-white shadow-sm"
+                  : "border border-line bg-white text-ink hover:border-navy/30"
               }`}
             >
-              All
+              All programmes
             </Link>
             {categories.map((c) => (
               <Link
                 key={c.id}
                 to={`/courses?category=${c.id}`}
-                className={`rounded-full px-4 py-2 text-sm font-medium ${
-                  cat === c.id ? "bg-navy text-white" : "bg-white text-ink"
+                className={`rounded-full px-5 py-2.5 text-sm font-bold transition ${
+                  cat === c.id
+                    ? "bg-navy text-white shadow-sm"
+                    : "border border-line bg-white text-ink hover:border-navy/30"
                 }`}
               >
-                {c.title.split(" ")[0]}…
+                {c.title}
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+      <section className="mx-auto max-w-7xl bg-white px-4 py-12 lg:px-8">
         {list.length === 0 ? (
-          <p className="text-muted">No courses match your search.</p>
+          <p className="text-muted">
+            {cat === "psychology"
+              ? "Psychology programmes are no longer offered. Please explore Business & Management or Health & Social Care."
+              : "No courses match your search."}
+          </p>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {list.map((c) => (
@@ -58,12 +70,13 @@ export default function Courses() {
               >
                 <div className="relative h-40">
                   <img
-                    src={c.image}
+                    src={c.image.replace(/\.webp/, "-sm.webp").replace("?v3", "")}
                     alt={c.title}
                     className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-navy/25" />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-navy">
+                  <div className="absolute inset-0 bg-navy/20" />
+                  <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-2.5 py-0.5 text-xs font-semibold text-navy">
                     {c.level}
                   </span>
                 </div>
@@ -72,7 +85,7 @@ export default function Courses() {
                     {c.tags.map((t) => (
                       <span
                         key={t}
-                        className="rounded-full bg-cream px-2.5 py-0.5 text-xs font-medium text-navy"
+                        className="rounded-full bg-[#f5f5f5] px-2.5 py-0.5 text-xs font-medium text-navy"
                       >
                         {t}
                       </span>

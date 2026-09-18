@@ -11,7 +11,7 @@ export type CoursePricing = {
 export type Course = {
   slug: string;
   title: string;
-  category: "business" | "health" | "psychology";
+  category: "business" | "health";
   level: string;
   tags: string[];
   duration: string;
@@ -28,7 +28,7 @@ export const site = {
   shortName: "MSBT",
   slogan: "EDUCATE - EMPOWER - EXCEL",
   tagline:
-    "Your career, your pace, your future. Study business, health & social care and psychology online, on your schedule.",
+    "Your career, your pace, your future. Study Business & Management and Health & Social Care online, on your schedule.",
   email: "naveed.rehman@msbt.co.uk",
   phone: "+447466065438",
   whatsapp: "+447466065438",
@@ -57,27 +57,19 @@ export function assetUrl(path: string): string {
 export const categories = [
   {
     id: "business",
-    title: "Business & Strategic Management",
+    title: "Business & Management",
     description:
-      "Ofqual-regulated diplomas from Level 3 to Level 7 in management and leadership.",
+      "Ofqual-regulated diplomas from Level 3 to Level 7 in business, management and leadership.",
     image: assetUrl("/categories/category-business.webp"),
     from: 795,
   },
   {
     id: "health",
-    title: "Health & Social Care Management",
+    title: "Health & Social Care",
     description:
       "Assignment-based pathways with no exams — ideal for care sector professionals.",
     image: assetUrl("/categories/category-health.webp"),
     from: 595,
-  },
-  {
-    id: "psychology",
-    title: "Psychology",
-    description:
-      "Level 4 and 5 psychology qualifications for counselling, HR and social work careers.",
-    image: assetUrl("/categories/category-psychology.webp"),
-    from: 895,
   },
 ];
 
@@ -234,36 +226,6 @@ export const courses: Course[] = [
     "09–12 Months",
     "Senior management qualification for health and social care executives and service directors.",
     { regular: 1550, discounted: 1295, deposit: 195, instalments: 11, instalmentAmount: 105 }
-  ),
-  mk(
-    "level-4-diploma-psychology",
-    "Level 4 Diploma in Psychology",
-    "psychology",
-    "RQF Level 4",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "06–09 Months",
-    "Fundamental principles and beginning knowledge in psychology — research methodologies and a survey of key subfields. Equivalent to Year 1 of a UK Bachelor's degree.",
-    { regular: 1050, discounted: 895, deposit: 150, instalments: 9, instalmentAmount: 89 }
-  ),
-  mk(
-    "level-5-diploma-psychology",
-    "Level 5 Diploma in Psychology",
-    "psychology",
-    "RQF Level 5",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "06–09 Months",
-    "Specialist progression in mental health, cognitive psychology, addiction, social psychology, criminology, intelligence and personality.",
-    { regular: 1200, discounted: 995, deposit: 150, instalments: 9, instalmentAmount: 99 }
-  ),
-  mk(
-    "level-5-extended-diploma-psychology",
-    "Level 5 Extended Diploma in Psychology",
-    "psychology",
-    "RQF Level 5 Extended",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "12–18 Months",
-    "Solid understanding of ideas, theories and methods in psychology with skills in analysing and evaluating psychological concepts.",
-    { regular: 1950, discounted: 1595, deposit: 195, instalments: 16, instalmentAmount: 95 }
   ),
 ];
 

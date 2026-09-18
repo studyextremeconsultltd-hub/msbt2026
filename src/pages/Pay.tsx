@@ -81,10 +81,10 @@ export default function Pay() {
   }
 
   return (
-    <main className="min-h-screen bg-cream">
+    <main className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-white via-cream to-peach py-12 text-ink">
+      <section className="relative overflow-hidden border-b border-line bg-white py-12 text-ink">
         <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-orange/15 blur-3xl" />
         <div className="absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
         <div className="relative mx-auto max-w-6xl px-4 text-center lg:px-8">

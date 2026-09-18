@@ -46,7 +46,7 @@ export const universityProgressionsContent = {
     },
     {
       heading: "Employability",
-      body: "The local and global recognition of our qualifications enables graduates to enhance their employability skills and pursue leadership roles across business, health and social care, and psychology-related professions.",
+      body: "The local and global recognition of our qualifications enables graduates to enhance their employability skills and pursue leadership roles across Business & Management and Health & Social Care professions.",
     },
   ],
   cta: "Speak with our admissions team to discuss the best progression route for your qualification and career goals.",

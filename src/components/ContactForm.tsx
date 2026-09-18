@@ -150,7 +150,7 @@ export default function ContactForm() {
 
   return (
     <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
-      <div className="relative border-b border-line bg-gradient-to-r from-cream via-white to-peach px-6 py-6 sm:px-8 sm:py-7">
+      <div className="relative border-b border-line bg-white px-6 py-6 sm:px-8 sm:py-7">
         <div className="relative">
           <h2 className="font-display text-2xl font-bold text-navy sm:text-3xl">Send a message</h2>
           <p className="mt-2 text-base font-semibold text-muted">

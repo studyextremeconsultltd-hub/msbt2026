@@ -61,21 +61,6 @@ const COURSES = {
     full: 1295,
     deposit: 195,
   },
-  "level-4-diploma-psychology": {
-    title: "Level 4 Diploma in Psychology",
-    full: 895,
-    deposit: 150,
-  },
-  "level-5-diploma-psychology": {
-    title: "Level 5 Diploma in Psychology",
-    full: 995,
-    deposit: 150,
-  },
-  "level-5-extended-diploma-psychology": {
-    title: "Level 5 Extended Diploma in Psychology",
-    full: 1595,
-    deposit: 195,
-  },
 };
 
 const STATIC_ALLOWED_ORIGINS = new Set([

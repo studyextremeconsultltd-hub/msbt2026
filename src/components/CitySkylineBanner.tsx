@@ -2,7 +2,7 @@ import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider"
 
 export default function CitySkylineBanner() {
   return (
-    <section className="bg-cream px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+    <section className="bg-white px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-7xl">
         <p className="mb-5 text-center text-sm font-bold uppercase tracking-[0.25em] text-muted sm:text-base">
           Manchester · United Kingdom
