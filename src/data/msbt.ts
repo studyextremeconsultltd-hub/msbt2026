@@ -33,6 +33,9 @@ export const site = {
   phone: "+447466065438",
   whatsapp: "+447466065438",
   address: "Office 2.13 Business Centre, Devonshire St N, Manchester M12 6JH",
+  /** Google Maps place / directions target */
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Office+2.13+Business+Centre+Devonshire+St+N+Manchester+M12+6JH",
 };
 
 export const heroTabs = ["Admissions", "Research", "Faculty", "Courses"] as const;
@@ -44,8 +47,8 @@ export const stats = [
   { value: "Explore MSBT", label: "View programmes", tone: "teal" as const, cta: true },
 ];
 
-/** Bump when replacing images in /public so browsers and Next.js serve fresh files. */
-export const IMAGE_CACHE_VERSION = "v2";
+/** Bump when replacing images in /public so browsers serve fresh files. */
+export const IMAGE_CACHE_VERSION = "v3";
 
 export function assetUrl(path: string): string {
   return `${path}?${IMAGE_CACHE_VERSION}`;
@@ -57,7 +60,7 @@ export const categories = [
     title: "Business & Strategic Management",
     description:
       "Ofqual-regulated diplomas from Level 3 to Level 7 in management and leadership.",
-    image: assetUrl("/categories/category-business.png"),
+    image: assetUrl("/categories/category-business.webp"),
     from: 795,
   },
   {
@@ -65,7 +68,7 @@ export const categories = [
     title: "Health & Social Care Management",
     description:
       "Assignment-based pathways with no exams — ideal for care sector professionals.",
-    image: assetUrl("/categories/category-health.png"),
+    image: assetUrl("/categories/category-health.webp"),
     from: 595,
   },
   {
@@ -73,7 +76,7 @@ export const categories = [
     title: "Psychology",
     description:
       "Level 4 and 5 psychology qualifications for counselling, HR and social work careers.",
-    image: assetUrl("/categories/category-psychology.png"),
+    image: assetUrl("/categories/category-psychology.webp"),
     from: 895,
   },
 ];
@@ -99,7 +102,7 @@ function mk(
     tags,
     duration,
     overview,
-    image: assetUrl(`/courses/${slug}.png`),
+    image: assetUrl(`/courses/${slug}.webp`),
     pricing,
     units,
   };

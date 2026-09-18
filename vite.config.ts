@@ -15,6 +15,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
+  "frame-src 'self' https://maps.google.com https://www.google.com https://www.google.com/maps",
   "connect-src 'self' https://nominatim.openstreetmap.org https://*.tile.openstreetmap.org https://demotiles.maplibre.org https://*",
   "form-action 'self'",
   "upgrade-insecure-requests",
@@ -39,6 +40,22 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+    },
+  },
+  build: {
+    target: "es2020",
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/maplibre-gl")) return "maplibre";
+          if (id.includes("node_modules/framer-motion")) return "motion";
+          if (id.includes("node_modules/react-dom") || id.includes("node_modules/react/")) {
+            return "react-vendor";
+          }
+          if (id.includes("node_modules/react-router")) return "router";
+        },
+      },
     },
   },
 });

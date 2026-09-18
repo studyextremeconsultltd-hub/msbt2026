@@ -10,11 +10,11 @@ export default function UniversityProgressions() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <section className="brand-gradient py-16 text-white">
+      <section className="brand-gradient border-b border-line py-16 text-ink">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-gold">Pathways</p>
-          <h1 className="mt-3 font-display text-4xl font-bold md:text-5xl">{title}</h1>
-          <p className="mt-5 max-w-3xl text-lg font-medium leading-relaxed text-white/90">
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-orange">Pathways</p>
+          <h1 className="mt-3 font-display text-4xl font-bold text-navy md:text-5xl">{title}</h1>
+          <p className="mt-5 max-w-3xl text-lg font-medium leading-relaxed text-muted">
             {intro}
           </p>
         </div>

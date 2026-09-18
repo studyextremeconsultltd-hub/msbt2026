@@ -84,18 +84,18 @@ export default function Pay() {
     <main className="min-h-screen bg-cream">
       <Navbar />
 
-      <section className="relative overflow-hidden bg-navy py-12 text-white">
-        <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-orange/30 blur-3xl" />
-        <div className="absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-teal/40 blur-3xl" />
+      <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-white via-cream to-peach py-12 text-ink">
+        <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-orange/15 blur-3xl" />
+        <div className="absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
         <div className="relative mx-auto max-w-6xl px-4 text-center lg:px-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-gold/35 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-gold-light backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-orange shadow-sm">
             <Sparkles className="h-4 w-4" />
             Secure course payment
           </span>
-          <h1 className="mt-4 font-display text-4xl font-bold md:text-5xl">
+          <h1 className="mt-4 font-display text-4xl font-bold text-navy md:text-5xl">
             Pay your MSBT course fee
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-white/80 md:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-muted md:text-base">
             Enter your details, confirm your programme and continue to Stripe’s
             secure card-payment page.
           </p>

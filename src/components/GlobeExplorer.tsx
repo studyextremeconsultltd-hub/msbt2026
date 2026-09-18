@@ -215,10 +215,10 @@ export default function GlobeExplorer({
     <div className="relative">
       <div
         ref={containerRef}
-        className="h-[420px] w-full bg-[#000814] md:h-[520px] lg:h-[600px]"
+        className="h-[420px] w-full bg-cream md:h-[520px] lg:h-[600px]"
       />
       {error && (
-        <p className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-navy/90 px-4 py-2 text-xs text-white">
+        <p className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full border border-line bg-white px-4 py-2 text-xs font-semibold text-navy shadow-md">
           {error}
         </p>
       )}

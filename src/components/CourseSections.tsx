@@ -31,8 +31,12 @@ export function LightStudentScene() {
                 className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-white ring-2 ring-peach sm:h-16 sm:w-16"
               >
                 <img
-                  src={`/students/student-${n}.png`}
+                  src={`/students/student-${n}.webp`}
                   alt=""
+                  width={64}
+                  height={64}
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
@@ -49,7 +53,7 @@ export function LightStudentScene() {
             {bubbles.map((text) => (
               <div
                 key={text}
-                className="rounded-xl bg-navy px-4 py-3 text-center text-sm font-bold text-white sm:text-base"
+                className="rounded-xl border border-line bg-white px-4 py-3 text-center text-sm font-bold text-navy shadow-sm sm:text-base"
               >
                 {text}
               </div>
@@ -92,7 +96,15 @@ export function CourseGrid({ limit }: { limit?: number }) {
               className="group overflow-hidden rounded-3xl border border-line bg-cream card-shadow transition hover:-translate-y-1"
             >
               <div className="relative h-52 sm:h-56">
-                <img src={cat.image} alt={cat.title} className="absolute inset-0 h-full w-full object-cover" />
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  width={800}
+                  height={448}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-navy/30" />
                 <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-4 py-1.5 text-sm font-bold text-navy">
                   From {formatGBP(cat.from)}
@@ -116,7 +128,15 @@ export function CourseGrid({ limit }: { limit?: number }) {
               className="group overflow-hidden rounded-2xl border border-line bg-cream transition hover:border-navy/30 hover:card-shadow"
             >
               <div className="relative h-44 sm:h-48">
-                <img src={c.image} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  width={800}
+                  height={384}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-navy/25" />
                 <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-sm font-bold text-navy">
                   {c.level}

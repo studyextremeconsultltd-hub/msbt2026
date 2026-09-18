@@ -15,9 +15,9 @@ function CoursePill({ courseIndex }: { courseIndex: number }) {
   return (
     <Link
       to={`/courses/${course.slug}`}
-      className="group block rounded-2xl border-2 border-gold/40 bg-gradient-to-br from-[#0f1f3d] via-navy to-[#0a1628] px-4 py-4 shadow-lg shadow-navy/30 ring-1 ring-gold/20 transition hover:scale-[1.02] hover:border-gold/60 hover:shadow-xl"
+      className="group block rounded-2xl border-2 border-gold/40 bg-gradient-to-br from-white via-cream to-peach px-4 py-4 shadow-md ring-1 ring-gold/20 transition hover:scale-[1.02] hover:border-gold/60 hover:shadow-lg"
     >
-      <p className="line-clamp-3 text-sm font-bold leading-snug text-white sm:text-base">
+      <p className="line-clamp-3 text-sm font-bold leading-snug text-navy sm:text-base">
         {course.title}
       </p>
       <p className="mt-2.5 flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-orange sm:text-sm">
@@ -39,8 +39,8 @@ export function HeroSideCourseColumn({ side }: { side: "left" | "right" }) {
 
   return (
     <aside className="hidden shrink-0 self-stretch lg:block lg:w-[220px] xl:w-[250px]">
-      <div className="mb-3 rounded-xl border border-gold/30 bg-navy px-3 py-2 text-center ring-1 ring-gold/20">
-        <p className="text-sm font-bold uppercase tracking-widest text-white xl:text-base">
+      <div className="mb-3 rounded-xl border border-gold/40 bg-white px-3 py-2 text-center shadow-sm ring-1 ring-gold/20">
+        <p className="text-sm font-bold uppercase tracking-widest text-navy xl:text-base">
           {config.label}
         </p>
       </div>

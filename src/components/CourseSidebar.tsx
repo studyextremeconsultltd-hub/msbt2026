@@ -215,8 +215,8 @@ export default function CourseSidebar({ course }: { course: Course }) {
 
       {/* Box 3 — Enrol Now */}
       <div className="overflow-hidden rounded-2xl border border-line bg-white card-shadow">
-        <div className="bg-navy px-5 py-3">
-          <h3 className="font-semibold text-white">Enrol Now</h3>
+        <div className="border-b border-line bg-cream px-5 py-3">
+          <h3 className="font-semibold text-navy">Enrol Now</h3>
         </div>
         <div className="space-y-4 p-5">
           {checkoutResult === "success" && (

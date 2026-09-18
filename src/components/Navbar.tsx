@@ -12,7 +12,7 @@ const links = [
 
 const navLinkClass = (overlay: boolean) =>
   `text-lg font-bold tracking-wide transition lg:text-xl ${
-    overlay ? "on-image-text hover:text-gold" : "text-ink hover:text-navy"
+    overlay ? "text-navy hover:text-orange" : "text-ink hover:text-navy"
   }`;
 
 export default function Navbar({
@@ -28,12 +28,12 @@ export default function Navbar({
     <header
       className={`${
         overlay
-          ? "absolute inset-x-0 top-0 border-b border-gold/25 bg-navy/55 backdrop-blur-md"
+          ? "absolute inset-x-0 top-0 border-b border-line/80 bg-white/90 backdrop-blur-md"
           : "sticky top-0 border-b border-gold/20 bg-white/95 backdrop-blur-md"
       } z-50 ${className}`}
     >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 lg:px-8 lg:py-3">
-          <BrandLogo overlay={overlay} size="lg" />
+          <BrandLogo size="lg" />
 
           <nav className="hidden items-center gap-5 md:flex lg:gap-8">
             {links.map((l) => (
@@ -52,13 +52,13 @@ export default function Navbar({
             </Link>
             <Link
               to="/pay"
-              className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-navy via-[#2a3544] to-gold px-3 py-1.5 text-white shadow-[0_7px_22px_rgba(26,35,46,0.4)] ring-2 ring-gold/40 transition hover:-translate-y-0.5 hover:scale-105 hover:shadow-[0_10px_28px_rgba(197,160,89,0.45)] sm:inline-flex"
+              className="group relative hidden overflow-hidden rounded-full bg-gradient-to-r from-orange to-gold px-3 py-1.5 text-white shadow-md ring-2 ring-gold/30 transition hover:-translate-y-0.5 hover:scale-105 sm:inline-flex"
               aria-label="Pay course fees securely with Stripe"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <span className="relative flex items-center gap-2">
                 <span className="relative rounded-full bg-white/20 p-1">
-                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-white ring-2 ring-orange" />
+                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full bg-white ring-2 ring-navy" />
                   <CreditCard className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <span className="text-left leading-tight">
@@ -73,7 +73,7 @@ export default function Navbar({
             </Link>
             <button
               type="button"
-              className={`rounded-lg p-2 md:hidden ${overlay ? "on-image-text" : "text-ink"}`}
+              className="rounded-lg p-2 text-navy md:hidden"
               onClick={() => setOpen(!open)}
               aria-label="Menu"
             >
@@ -83,18 +83,12 @@ export default function Navbar({
         </div>
 
         {open && (
-          <div
-            className={`border-t px-4 py-4 md:hidden ${
-              overlay ? "border-gold/20 bg-navy/95 backdrop-blur-sm" : "border-line bg-white"
-            }`}
-          >
+          <div className="border-t border-line bg-white px-4 py-4 md:hidden">
             {links.map((l) => (
               <Link
                 key={l.label}
                 to={l.href}
-                className={`block py-2.5 text-base font-bold ${
-                  overlay ? "text-white" : "text-ink"
-                }`}
+                className="block py-2.5 text-base font-bold text-ink"
                 onClick={() => setOpen(false)}
               >
                 {l.label}
@@ -102,7 +96,7 @@ export default function Navbar({
             ))}
             <Link
               to="/pay"
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-navy via-[#2a3544] to-gold px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg"
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange to-gold px-5 py-3 text-center text-sm font-extrabold text-white shadow-lg"
               onClick={() => setOpen(false)}
             >
               <CreditCard className="h-5 w-5" />

@@ -1,4 +1,5 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
+import { Clock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { site } from "@/data/msbt";
 
 const socialLinks = [
@@ -34,71 +35,104 @@ const socialLinks = [
   },
 ];
 
+const contactRows = [
+  {
+    key: "address",
+    label: "Google address",
+    icon: MapPin,
+    iconWrap: "bg-gradient-to-br from-[#EA4335] to-[#FBBC05] text-white shadow-orange/30",
+    body: (
+      <>
+        <p className="text-base font-bold leading-relaxed text-ink sm:text-lg">{site.address}</p>
+        <a
+          href={site.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#4285F4] px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-[#3367D6]"
+        >
+          Open in Google Maps
+          <ExternalLink size={15} aria-hidden />
+        </a>
+      </>
+    ),
+  },
+  {
+    key: "phone",
+    label: "Phone",
+    icon: Phone,
+    iconWrap: "bg-gradient-to-br from-teal to-sky text-white shadow-teal/30",
+    body: (
+      <a
+        href={`tel:${site.phone.replace(/\s/g, "")}`}
+        className="block text-base font-bold text-navy underline-offset-2 hover:underline sm:text-lg"
+      >
+        {site.phone}
+      </a>
+    ),
+  },
+  {
+    key: "email",
+    label: "Email",
+    icon: Mail,
+    iconWrap: "bg-gradient-to-br from-navy to-[#2a4a7a] text-gold shadow-navy/30",
+    body: (
+      <a
+        href={`mailto:${site.email}`}
+        className="block break-all text-base font-bold text-navy underline-offset-2 hover:underline sm:text-lg"
+      >
+        {site.email}
+      </a>
+    ),
+  },
+  {
+    key: "hours",
+    label: "Support hours",
+    icon: Clock,
+    iconWrap: "bg-gradient-to-br from-orange to-peach-deep text-white shadow-orange/30",
+    body: (
+      <p className="text-base font-bold text-ink sm:text-lg">Monday – Friday, 9:00 – 17:00 (UK)</p>
+    ),
+  },
+] as const;
+
 const mapQuery = encodeURIComponent(site.address);
-const mapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&hl=en&z=13&output=embed`;
+const mapEmbedUrl = `https://maps.google.com/maps?q=${mapQuery}&hl=en&z=15&output=embed`;
 
 export default function ContactSidebar() {
+  const [showMap, setShowMap] = useState(false);
+
   return (
     <aside className="space-y-6" aria-label="Contact information">
       <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
-        <div className="border-b border-line bg-navy/5 px-6 py-5">
+        <div className="border-b border-line bg-gradient-to-r from-navy/10 via-gold/10 to-orange/10 px-6 py-5">
           <h2 className="font-display text-2xl font-bold text-navy">Visit &amp; connect</h2>
+          <p className="mt-1 text-sm font-semibold text-muted">
+            Find us on Google Maps or reach admissions directly.
+          </p>
         </div>
 
-        <ul className="space-y-5 p-6">
-          <li className="flex gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
-              <MapPin size={22} aria-hidden />
-            </span>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-muted">Address</p>
-              <p className="mt-1 text-base font-bold leading-relaxed text-ink">{site.address}</p>
-            </div>
-          </li>
-
-          <li className="flex gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
-              <Phone size={22} aria-hidden />
-            </span>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-muted">Phone</p>
-              <a
-                href={`tel:${site.phone.replace(/\s/g, "")}`}
-                className="mt-1 block text-base font-bold text-navy underline-offset-2 hover:underline"
-              >
-                {site.phone}
-              </a>
-            </div>
-          </li>
-
-          <li className="flex gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
-              <Mail size={22} aria-hidden />
-            </span>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-muted">Email</p>
-              <a
-                href={`mailto:${site.email}`}
-                className="mt-1 block text-base font-bold text-navy underline-offset-2 hover:underline break-all"
-              >
-                {site.email}
-              </a>
-            </div>
-          </li>
-
-          <li className="flex gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/10 text-navy">
-              <Clock size={22} aria-hidden />
-            </span>
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-muted">Support hours</p>
-              <p className="mt-1 text-base font-bold text-ink">Monday – Friday, 9:00 – 17:00 (UK)</p>
-            </div>
-          </li>
+        <ul className="divide-y divide-line/80 p-2 sm:p-3">
+          {contactRows.map((row) => {
+            const Icon = row.icon;
+            return (
+              <li key={row.key} className="flex items-start gap-4 px-4 py-5 sm:px-5">
+                <span
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-lg ${row.iconWrap}`}
+                  aria-hidden
+                >
+                  <Icon size={22} strokeWidth={2.25} />
+                </span>
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-muted">{row.label}</p>
+                  <div className="mt-1.5">{row.body}</div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="border-t border-line px-6 py-5">
-          <p className="text-sm font-bold uppercase tracking-wide text-muted">Follow us</p>
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-muted">Follow us</p>
           <div className="mt-3 flex flex-wrap gap-3">
             {socialLinks.map((social) => (
               <a
@@ -117,19 +151,47 @@ export default function ContactSidebar() {
       </div>
 
       <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
-        <div className="aspect-[4/3] w-full sm:aspect-video lg:aspect-[4/3]">
-          <iframe
-            title={`Map showing ${site.name} location in ${site.address}`}
-            src={mapEmbedUrl}
-            className="h-full w-full border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
+        <div className="flex items-center justify-between gap-3 border-b border-line bg-[#F8FAFF] px-5 py-4">
+          <div>
+            <p className="text-sm font-black uppercase tracking-wide text-[#4285F4]">Google Maps</p>
+            <p className="mt-0.5 text-sm font-semibold text-ink">{site.address}</p>
+          </div>
+          <a
+            href={site.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 text-sm font-bold text-[#4285F4] underline-offset-2 hover:underline"
+          >
+            Directions
+          </a>
         </div>
-        <p className="border-t border-line px-4 py-3 text-center text-sm font-medium text-muted">
-          {site.name} · {site.address}
-        </p>
+
+        <div className="relative aspect-[4/3] w-full bg-navy/5 sm:aspect-video lg:aspect-[4/3]">
+          {showMap ? (
+            <iframe
+              title={`Google Map showing ${site.name} at ${site.address}`}
+              src={mapEmbedUrl}
+              className="h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowMap(true)}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[linear-gradient(160deg,#e8f0fe_0%,#fff_45%,#fef7e0_100%)] px-6 text-center transition hover:brightness-[0.98]"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EA4335] text-white shadow-lg">
+                <MapPin size={28} aria-hidden />
+              </span>
+              <span className="text-lg font-bold text-navy">Show Google Map</span>
+              <span className="max-w-xs text-sm font-medium text-muted">
+                Loads the map when you need it — faster page on mobile.
+              </span>
+            </button>
+          )}
+        </div>
       </div>
     </aside>
   );

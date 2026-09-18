@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import Home from "@/pages/Home";
-import About from "@/pages/About";
-import Courses from "@/pages/Courses";
-import CourseDetail from "@/pages/CourseDetail";
-import Contact from "@/pages/Contact";
-import UniversityProgressions from "@/pages/UniversityProgressions";
-import Pay from "@/pages/Pay";
+import { lazy, Suspense, useEffect } from "react";
+
+const Home = lazy(() => import("@/pages/Home"));
+const About = lazy(() => import("@/pages/About"));
+const Courses = lazy(() => import("@/pages/Courses"));
+const CourseDetail = lazy(() => import("@/pages/CourseDetail"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const UniversityProgressions = lazy(() => import("@/pages/UniversityProgressions"));
+const Pay = lazy(() => import("@/pages/Pay"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -16,19 +17,29 @@ function ScrollToTop() {
   return null;
 }
 
+function PageFallback() {
+  return (
+    <div className="flex min-h-[50vh] items-center justify-center bg-cream px-4" role="status">
+      <p className="text-base font-bold text-navy">Loading MSBT…</p>
+    </div>
+  );
+}
+
 function AppShell() {
   return (
     <>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/:slug" element={<CourseDetail />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/pay" element={<Pay />} />
-        <Route path="/university-progressions" element={<UniversityProgressions />} />
-      </Routes>
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:slug" element={<CourseDetail />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pay" element={<Pay />} />
+          <Route path="/university-progressions" element={<UniversityProgressions />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

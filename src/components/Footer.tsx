@@ -53,28 +53,27 @@ const socialLinks = [
 export default function Footer() {
   return (
     <>
-      <div className="relative overflow-hidden bg-gradient-to-r from-navy via-[#2a3544] to-gold py-5 shadow-[0_-8px_40px_rgba(26,35,46,0.28)]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(197,160,89,0.35),transparent_55%)]" />
+      <div className="relative overflow-hidden border-y border-line bg-gradient-to-r from-white via-cream to-peach py-5">
         <div className="relative mx-auto max-w-7xl px-4 text-center lg:px-8">
           <Link
             to="/courses"
-            className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-white drop-shadow-md transition hover:scale-[1.02] hover:text-gold-light sm:text-xl"
+            className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-navy transition hover:scale-[1.02] hover:text-orange sm:text-xl"
           >
             Our Popular Online Courses
-            <ChevronDown className="h-6 w-6 animate-bounce" strokeWidth={3} />
+            <ChevronDown className="h-6 w-6 animate-bounce text-orange" strokeWidth={3} />
           </Link>
         </div>
       </div>
 
-      <footer className="relative overflow-hidden bg-navy-deep text-white">
+      <footer className="relative overflow-hidden border-t border-line bg-white text-ink">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
-        <div className="pointer-events-none absolute -left-24 top-16 h-64 w-64 rounded-full bg-orange/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-24 top-16 h-64 w-64 rounded-full bg-gold/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 bottom-10 h-56 w-56 rounded-full bg-sky/10 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:px-8 lg:py-16">
           <div className="lg:col-span-4">
-            <BrandLogo inverted size="sm" />
-            <p className="mt-4 max-w-sm text-base font-medium leading-relaxed text-white/75">
+            <BrandLogo size="sm" />
+            <p className="mt-4 max-w-sm text-base font-medium leading-relaxed text-muted">
               Professional online education rooted in Manchester — flexible pathways
               from Level 3 to Level 7.
             </p>
@@ -85,7 +84,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex h-11 w-11 items-center justify-center rounded-full ${social.bg} shadow-lg ring-2 ring-white/10 transition hover:scale-110 hover:brightness-110`}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full ${social.bg} shadow-md ring-2 ring-navy/5 transition hover:scale-110 hover:brightness-110`}
                   aria-label={social.label}
                 >
                   {social.icon}
@@ -95,7 +94,7 @@ export default function Footer() {
           </div>
 
           <nav className="lg:col-span-2">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-navy">
               Explore
             </h3>
             <ul className="space-y-3">
@@ -103,7 +102,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-base font-semibold text-white/90 transition hover:text-sky"
+                    className="text-base font-semibold text-muted transition hover:text-navy"
                   >
                     {link.label}
                   </Link>
@@ -113,7 +112,7 @@ export default function Footer() {
           </nav>
 
           <nav className="lg:col-span-2">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-navy">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -121,7 +120,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-base font-semibold text-white/90 transition hover:text-sky"
+                    className="text-base font-semibold text-muted transition hover:text-navy"
                   >
                     {link.label}
                   </Link>
@@ -131,35 +130,45 @@ export default function Footer() {
           </nav>
 
           <div className="sm:col-span-2 lg:col-span-4">
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-gold">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-navy">
               Registered Office
             </h3>
-            <div className="rounded-2xl border border-gold/30 bg-gradient-to-br from-white/10 to-white/[0.03] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.25)] ring-1 ring-white/10 backdrop-blur-sm">
-              <p className="font-display text-lg font-bold text-white">{site.name}</p>
-              <p className="mt-1 text-sm font-medium text-gold-light">
+            <div className="rounded-2xl border border-line bg-cream p-5 card-shadow ring-1 ring-gold/20">
+              <p className="font-display text-lg font-bold text-navy">{site.name}</p>
+              <p className="mt-1 text-sm font-medium text-orange">
                 Company registered in the United Kingdom
               </p>
               <div className="mt-4 flex gap-3">
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange/90 text-white shadow-md">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange text-white shadow-md">
                   <MapPin size={18} aria-hidden />
                 </span>
-                <p className="text-base font-semibold leading-relaxed text-white/95">
-                  {site.address}
-                </p>
+                <div>
+                  <p className="text-base font-semibold leading-relaxed text-ink">
+                    {site.address}
+                  </p>
+                  <a
+                    href={site.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex text-sm font-bold text-[#4285F4] underline-offset-2 hover:underline"
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
               </div>
-              <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
+              <div className="mt-4 space-y-2 border-t border-line pt-4">
                 <a
                   href={`mailto:${site.email}`}
-                  className="flex items-center gap-2 text-sm font-semibold text-white/85 transition hover:text-sky"
+                  className="flex items-center gap-2 text-sm font-semibold text-muted transition hover:text-navy"
                 >
-                  <Mail size={16} className="text-sky" aria-hidden />
+                  <Mail size={16} className="text-teal" aria-hidden />
                   {site.email}
                 </a>
                 <a
                   href={`tel:${site.phone}`}
-                  className="flex items-center gap-2 text-sm font-semibold text-white/85 transition hover:text-sky"
+                  className="flex items-center gap-2 text-sm font-semibold text-muted transition hover:text-navy"
                 >
-                  <Phone size={16} className="text-sky" aria-hidden />
+                  <Phone size={16} className="text-teal" aria-hidden />
                   {site.phone}
                 </a>
               </div>
@@ -167,9 +176,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="relative border-t border-white/10 bg-black/20">
+        <div className="relative border-t border-line bg-cream">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 sm:flex-row lg:px-8">
-            <p className="text-center text-sm font-semibold text-white/70 sm:text-left sm:text-base">
+            <p className="text-center text-sm font-semibold text-muted sm:text-left sm:text-base">
               © {new Date().getFullYear()} {site.shortName}. All rights reserved.
             </p>
             <BackToTop />

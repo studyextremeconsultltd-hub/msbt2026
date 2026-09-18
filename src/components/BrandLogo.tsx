@@ -40,7 +40,7 @@ export default function BrandLogo({
           style={{ height: s.h }}
         >
           <img
-            src="/brand/msbt-logo.png"
+            src="/brand/msbt-logo.webp"
             alt={`${site.name} logo`}
             width={s.w}
             height={s.h}

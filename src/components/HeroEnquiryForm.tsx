@@ -75,19 +75,18 @@ export default function HeroEnquiryForm() {
   return (
     <div className="relative mx-auto mt-8 w-full max-w-2xl">
       <div className="overflow-hidden rounded-3xl border-2 border-navy/10 bg-white card-shadow ring-2 ring-navy/5">
-        <div className="relative bg-gradient-to-r from-navy via-[#1a3060] to-navy px-6 py-6 sm:px-8 sm:py-7 ring-1 ring-gold/25">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(232,108,42,0.3),transparent_55%)]" />
+        <div className="relative border-b border-line bg-gradient-to-r from-cream via-white to-peach px-6 py-6 sm:px-8 sm:py-7">
           <div className="relative flex items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm ring-2 ring-white/20">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-navy/10 ring-2 ring-gold/30">
               <GraduationCap className="text-orange" size={28} />
             </div>
             <div>
-              <h3 className="font-display text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+              <h3 className="font-display text-2xl font-bold text-navy sm:text-3xl md:text-4xl">
                 Start Your Journey
               </h3>
-              <p className="mt-2 text-base font-semibold text-white/90 sm:text-lg">
+              <p className="mt-2 text-base font-semibold text-muted sm:text-lg">
                 Submit your enquiry — our admissions team at{" "}
-                <span className="text-gold">{site.email}</span> will respond within 24 hours.
+                <span className="text-navy">{site.email}</span> will respond within 24 hours.
               </p>
             </div>
           </div>

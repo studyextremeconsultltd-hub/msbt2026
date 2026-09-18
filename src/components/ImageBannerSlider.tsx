@@ -56,6 +56,7 @@ export default function ImageBannerSlider({
   }, [slides.length]);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(next, INTERVAL_MS);
     return () => clearInterval(id);
   }, [next]);
@@ -63,7 +64,7 @@ export default function ImageBannerSlider({
   const slide = slides[index];
 
   return (
-    <div className={`relative mx-auto ${styles.wrapper} overflow-hidden rounded-3xl border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.35)] ring-1 ring-white/5 ${className}`}>
+    <div className={`relative mx-auto ${styles.wrapper} overflow-hidden rounded-3xl border border-line bg-white shadow-[0_16px_40px_rgba(26,35,46,0.08)] ring-1 ring-gold/15 ${className}`}>
       <div className={`relative w-full ${styles.aspect}`}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -77,6 +78,11 @@ export default function ImageBannerSlider({
             <img
               src={slide.src}
               alt={slide.alt}
+              width={1600}
+              height={700}
+              decoding="async"
+              fetchPriority={index === 0 && variant === "hero" ? "high" : "low"}
+              loading={index === 0 && variant === "hero" ? "eager" : "lazy"}
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
           </motion.div>
@@ -84,7 +90,7 @@ export default function ImageBannerSlider({
 
         <div className="hero-mirror-overlay" />
         <div className="hero-mirror-shine" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a2838]/85 via-[#1a2838]/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy/55 via-navy/10 to-transparent" />
 
         <p className={`absolute bottom-5 left-5 right-20 z-10 on-image-text ${styles.caption}`}>
           {slide.caption}
@@ -93,7 +99,7 @@ export default function ImageBannerSlider({
         <button
           type="button"
           onClick={prev}
-          className={`absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition hover:bg-white/30 sm:left-4 ${styles.arrow}`}
+          className={`absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:left-4 ${styles.arrow}`}
           aria-label="Previous slide"
         >
           <ChevronLeft size={styles.arrowIcon} />
@@ -101,7 +107,7 @@ export default function ImageBannerSlider({
         <button
           type="button"
           onClick={next}
-          className={`absolute right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition hover:bg-white/30 sm:right-4 ${styles.arrow}`}
+          className={`absolute right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:right-4 ${styles.arrow}`}
           aria-label="Next slide"
         >
           <ChevronRight size={styles.arrowIcon} />
@@ -127,17 +133,17 @@ export default function ImageBannerSlider({
 
 export const manchesterSlides = [
   {
-    src: "/manchester/manchester-spinningfields.png",
+    src: "/manchester/manchester-spinningfields.webp",
     alt: "Manchester Spinningfields business district skyline",
     caption: "Manchester — a global hub for business & innovation",
   },
   {
-    src: "/manchester/manchester-waterfront.png",
+    src: "/manchester/manchester-waterfront.webp",
     alt: "Manchester waterfront and MediaCityUK",
     caption: "Study from anywhere — rooted in a world-class city",
   },
   {
-    src: "/manchester/manchester-hero.png",
+    src: "/manchester/manchester-hero.webp",
     alt: "Manchester city skyline at golden hour",
     caption: "Flexible online learning with professional accreditation",
   },
@@ -146,17 +152,17 @@ export const manchesterSlides = [
 /** Bottom showcase slider — Universal Square campus (from Pics/) */
 export const campusSlides = [
   {
-    src: "/manchester/campus-01.jpeg",
+    src: "/manchester/campus-01.webp",
     alt: "Universal Square Manchester — landscaped courtyard and modern office buildings",
     caption: "Universal Square, Manchester — where ambition meets opportunity",
   },
   {
-    src: "/manchester/campus-02.jpeg",
+    src: "/manchester/campus-02.webp",
     alt: "Aerial view of Universal Square Manchester campus and city skyline",
     caption: "A modern campus in the heart of Manchester’s business district",
   },
   {
-    src: "/manchester/campus-03.jpeg",
+    src: "/manchester/campus-03.webp",
     alt: "Universal Square Manchester at golden hour with city skyline behind",
     caption: "Professional education rooted in a world-class city",
   },

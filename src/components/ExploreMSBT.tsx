@@ -41,8 +41,8 @@ export default function ExploreMSBT() {
         <div className="overflow-hidden rounded-3xl border border-line card-shadow">
           <Suspense
             fallback={
-              <div className="flex h-[420px] items-center justify-center bg-[#000814] text-sm text-white/70 md:h-[520px] lg:h-[600px]">
-                Loading 3D globe…
+              <div className="flex h-[420px] items-center justify-center bg-cream text-sm font-semibold text-muted md:h-[520px] lg:h-[600px]">
+                Loading map…
               </div>
             }
           >
