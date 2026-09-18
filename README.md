@@ -36,7 +36,7 @@ npm run preview
 | `/about` | About MSBT |
 | `/courses` | All programmes |
 | `/courses/:slug` | Course detail |
-| `/contact` | Contact form (mailto) |
+| `/contact` | Contact form (direct email to admissions) |
 | `/university-progressions` | University pathways |
 
 ## Deploy (GitHub Pages + GoDaddy) — like Automexa
@@ -70,4 +70,31 @@ GitHub Pages → Custom domain → `msbt.co.uk` (+ www if needed).
 
 Remove old Vercel records (`cname.vercel-dns.com`, `76.76.21.21`, etc.).
 
-Forms use **mailto** (no server API) — same approach as Automexa.
+## Contact / enquiry emails (direct delivery)
+
+Website forms no longer use `mailto`. They POST to a Cloudflare Worker which
+emails **`naveed.rehman@msbt.co.uk`** via Resend (Reply-To = visitor email).
+
+See [`cloudflare/contact-worker/README.md`](cloudflare/contact-worker/README.md).
+
+Quick deploy:
+
+```powershell
+cd "e:\MSBT\msbt-main\cloudflare\contact-worker"
+npm install
+npx wrangler login
+npx wrangler secret put RESEND_API_KEY
+npm run deploy
+```
+
+You need:
+
+1. Resend account + verified `msbt.co.uk` domain
+2. API key `re_...` stored as Cloudflare secret `RESEND_API_KEY`
+3. From address: `MSBT Admissions <admissions@msbt.co.uk>` (after domain verify)
+
+Optional build override if the Worker URL differs:
+
+```text
+VITE_CONTACT_API_URL=https://msbt-contact.engr-noumanfaiz.workers.dev
+```

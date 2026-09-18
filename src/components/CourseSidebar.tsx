@@ -8,6 +8,7 @@ import {
   site,
 } from "@/data/msbt";
 import { startStripeCheckout } from "@/lib/checkout";
+import { submitEnquiry } from "@/lib/enquiry";
 
 type PaymentOption = "fast" | "full" | "instalment";
 
@@ -16,8 +17,11 @@ export default function CourseSidebar({ course }: { course: Course }) {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [selectedCourse, setSelectedCourse] = useState(course.slug);
+  const [company, setCompany] = useState("");
   const [payment, setPayment] = useState<PaymentOption>("fast");
   const [submitted, setSubmitted] = useState(false);
+  const [enquiryLoading, setEnquiryLoading] = useState(false);
+  const [enquiryError, setEnquiryError] = useState("");
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
 
@@ -26,10 +30,36 @@ export default function CourseSidebar({ course }: { course: Course }) {
   const allCourses = courseListForEnquiry();
   const checkoutResult = new URLSearchParams(window.location.search).get("checkout");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !email.trim()) return;
-    setSubmitted(true);
+
+    const programmeTitle =
+      allCourses.find((item) => item.slug === selectedCourse)?.title || course.title;
+
+    setEnquiryLoading(true);
+    setEnquiryError("");
+    try {
+      await submitEnquiry({
+        type: "course",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        programme: programmeTitle,
+        message: `Course page enquiry for ${programmeTitle}.`,
+        company,
+      });
+      setSubmitted(true);
+      setCompany("");
+    } catch (error) {
+      setEnquiryError(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your enquiry right now. Please try again shortly.",
+      );
+    } finally {
+      setEnquiryLoading(false);
+    }
   }
 
   async function handleCheckout() {
@@ -73,6 +103,18 @@ export default function CourseSidebar({ course }: { course: Course }) {
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+            <div className="hidden" aria-hidden="true">
+              <label htmlFor="course-company">Company</label>
+              <input
+                id="course-company"
+                name="company"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+              />
+            </div>
             <div>
               <label className="text-xs font-medium text-ink">
                 Name <span className="text-red-500">*</span>
@@ -125,11 +167,17 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 ))}
               </select>
             </div>
+            {enquiryError && (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700" role="alert">
+                {enquiryError}
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full rounded-xl bg-navy py-2.5 text-sm font-semibold text-white hover:bg-navy/90"
+              disabled={enquiryLoading}
+              className="w-full rounded-xl bg-navy py-2.5 text-sm font-semibold text-white hover:bg-navy/90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Submit Enquiry
+              {enquiryLoading ? "Sending…" : "Submit Enquiry"}
             </button>
           </form>
         )}

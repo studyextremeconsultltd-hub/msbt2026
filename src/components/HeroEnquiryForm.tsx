@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, GraduationCap, Loader2, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
 import { courseListForEnquiry, site } from "@/data/msbt";
+import { submitEnquiry } from "@/lib/enquiry";
 
 const hearAboutOptions = [
   "Google search",
@@ -16,28 +17,6 @@ const inputClass =
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
-function buildMailto(name: string, email: string, phone: string, course: string, query: string, heardFrom: string) {
-  const allCourses = courseListForEnquiry();
-  const courseTitle =
-    course === "unsure"
-      ? "Not sure yet — advise me"
-      : (allCourses.find((c) => c.slug === course)?.title ?? course) || "Not specified";
-
-  const body = [
-    `Name: ${name}`,
-    `Email: ${email}`,
-    `Phone: ${phone}`,
-    `Programme: ${courseTitle}`,
-    heardFrom ? `Heard from: ${heardFrom}` : "",
-    "",
-    query || "(No additional message)",
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  return `mailto:${site.email}?subject=${encodeURIComponent(`MSBT Enquiry — ${courseTitle}`)}&body=${encodeURIComponent(body)}`;
-}
-
 export default function HeroEnquiryForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -45,6 +24,7 @@ export default function HeroEnquiryForm() {
   const [course, setCourse] = useState("");
   const [query, setQuery] = useState("");
   const [heardFrom, setHeardFrom] = useState("");
+  const [company, setCompany] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -57,11 +37,39 @@ export default function HeroEnquiryForm() {
     setSubmitState("submitting");
     setStatusMessage("");
 
-    window.location.href = buildMailto(name, email, phone, course, query, heardFrom);
-    setSubmitState("success");
-    setStatusMessage(
-      `Your email app has been opened to send your enquiry to ${site.email}.`,
-    );
+    const courseTitle =
+      course === "unsure"
+        ? "Not sure yet — advise me"
+        : (allCourses.find((c) => c.slug === course)?.title ?? course) || "Not specified";
+
+    try {
+      const message = await submitEnquiry({
+        type: "hero",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        programme: courseTitle,
+        message: query.trim() || "(No additional message)",
+        heardFrom: heardFrom.trim(),
+        company,
+      });
+      setSubmitState("success");
+      setStatusMessage(message);
+      setName("");
+      setPhone("");
+      setEmail("");
+      setCourse("");
+      setQuery("");
+      setHeardFrom("");
+      setCompany("");
+    } catch (error) {
+      setSubmitState("error");
+      setStatusMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your enquiry right now. Please try again shortly.",
+      );
+    }
   }
 
   return (
@@ -109,12 +117,22 @@ export default function HeroEnquiryForm() {
                 </div>
               )}
 
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="hero-company">Company</label>
+                <input
+                  id="hero-company"
+                  name="company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </div>
+
               <p className="text-sm font-bold text-muted sm:text-base">
-                Fields marked <span className="text-orange">*</span> are required. Enquiries are sent to{" "}
-                <a href={`mailto:${site.email}`} className="text-navy underline-offset-2 hover:underline">
-                  {site.email}
-                </a>
-                .
+                Fields marked <span className="text-orange">*</span> are required. Enquiries are sent
+                directly to {site.email}.
               </p>
 
               <div className="grid gap-5 sm:grid-cols-2">

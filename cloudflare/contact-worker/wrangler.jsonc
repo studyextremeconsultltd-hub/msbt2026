@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "msbt-contact",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "SITE_URL": "https://www.msbt.co.uk",
+    "CONTACT_TO_EMAIL": "naveed.rehman@msbt.co.uk",
+    "CONTACT_FROM_EMAIL": "MSBT Admissions <admissions@msbt.co.uk>"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

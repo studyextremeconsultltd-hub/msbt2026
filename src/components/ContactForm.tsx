@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, Loader2, Mail, MessageSquare, Phone, Send, User } from "lucide-react";
-import { site } from "@/data/msbt";
+import { submitEnquiry } from "@/lib/enquiry";
 
 type FormFields = {
   name: string;
@@ -8,9 +8,10 @@ type FormFields = {
   phone: string;
   subject: string;
   message: string;
+  company: string;
 };
 
-type FormErrors = Partial<Record<keyof FormFields, string>>;
+type FormErrors = Partial<Record<Exclude<keyof FormFields, "company">, string>>;
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
@@ -64,19 +65,6 @@ function validate(fields: FormFields): FormErrors {
   return errors;
 }
 
-function mailtoFallback(fields: FormFields) {
-  const body = [
-    `Name: ${fields.name}`,
-    `Email: ${fields.email}`,
-    `Phone: ${fields.phone}`,
-    "",
-    fields.message,
-  ].join("\n");
-
-  const mailto = `mailto:${encodeURIComponent(site.email)}?subject=${encodeURIComponent(fields.subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = mailto;
-}
-
 export default function ContactForm() {
   const [fields, setFields] = useState<FormFields>({
     name: "",
@@ -84,6 +72,7 @@ export default function ContactForm() {
     phone: "",
     subject: "",
     message: "",
+    company: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
@@ -91,7 +80,7 @@ export default function ContactForm() {
 
   function updateField<K extends keyof FormFields>(key: K, value: FormFields[K]) {
     setFields((prev) => ({ ...prev, [key]: value }));
-    if (errors[key]) {
+    if (key !== "company" && errors[key]) {
       setErrors((prev) => {
         const next = { ...prev };
         delete next[key];
@@ -104,7 +93,7 @@ export default function ContactForm() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const validationErrors = validate(fields);
     if (Object.keys(validationErrors).length > 0) {
@@ -118,11 +107,34 @@ export default function ContactForm() {
     setStatusMessage("");
     setErrors({});
 
-    mailtoFallback(fields);
-    setSubmitState("success");
-    setStatusMessage(
-      "We opened your email app. Please send the message to complete your enquiry.",
-    );
+    try {
+      const message = await submitEnquiry({
+        type: "contact",
+        name: fields.name.trim(),
+        email: fields.email.trim(),
+        phone: fields.phone.trim(),
+        subject: fields.subject.trim(),
+        message: fields.message.trim(),
+        company: fields.company,
+      });
+      setSubmitState("success");
+      setStatusMessage(message);
+      setFields({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+        company: "",
+      });
+    } catch (error) {
+      setSubmitState("error");
+      setStatusMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your enquiry right now. Please try again shortly.",
+      );
+    }
   }
 
   const fieldIds = {
@@ -169,6 +181,19 @@ export default function ContactForm() {
         )}
 
         <form onSubmit={handleSubmit} noValidate className="space-y-5" aria-label="Contact form">
+          <div className="hidden" aria-hidden="true">
+            <label htmlFor="contact-company">Company</label>
+            <input
+              id="contact-company"
+              name="company"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={fields.company}
+              onChange={(e) => updateField("company", e.target.value)}
+            />
+          </div>
+
           <div>
             <label htmlFor={fieldIds.name} className={labelClass}>
               <User size={18} className="text-navy" aria-hidden />

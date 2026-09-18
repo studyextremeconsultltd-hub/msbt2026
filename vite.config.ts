@@ -16,7 +16,7 @@ const csp = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   "connect-src 'self' https://nominatim.openstreetmap.org https://*.tile.openstreetmap.org https://demotiles.maplibre.org https://*",
-  "form-action 'self' mailto:",
+  "form-action 'self'",
   "upgrade-insecure-requests",
 ].join("; ");
 
