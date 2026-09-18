@@ -80,12 +80,15 @@ export default function ContactForm() {
 
   function updateField<K extends keyof FormFields>(key: K, value: FormFields[K]) {
     setFields((prev) => ({ ...prev, [key]: value }));
-    if (key !== "company" && errors[key]) {
-      setErrors((prev) => {
-        const next = { ...prev };
-        delete next[key];
-        return next;
-      });
+    if (key !== "company") {
+      const errorKey = key as Exclude<keyof FormFields, "company">;
+      if (errors[errorKey]) {
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next[errorKey];
+          return next;
+        });
+      }
     }
     if (submitState === "error") {
       setSubmitState("idle");
