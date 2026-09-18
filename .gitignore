@@ -46,3 +46,7 @@ Pics/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+lh-*.json
+*.lighthouseci
+
