@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -14,7 +13,7 @@ type ImageBannerSliderProps = {
   className?: string;
 };
 
-const INTERVAL_MS = 5500;
+const INTERVAL_MS = 6500;
 
 const variantStyles = {
   hero: {
@@ -29,7 +28,7 @@ const variantStyles = {
   },
   showcase: {
     wrapper: "max-w-7xl",
-    aspect: "aspect-[16/9] h-[320px] sm:h-[420px] md:h-[520px] lg:h-[560px]",
+    aspect: "aspect-[16/9] h-[280px] sm:h-[360px] md:h-[440px] lg:h-[480px]",
     caption: "text-base font-bold sm:text-lg md:text-xl",
     arrow: "h-11 w-11 sm:h-12 sm:w-12",
     arrowIcon: 24,
@@ -57,36 +56,33 @@ export default function ImageBannerSlider({
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (slides.length < 2) return;
     const id = setInterval(next, INTERVAL_MS);
     return () => clearInterval(id);
-  }, [next]);
+  }, [next, slides.length]);
 
   const slide = slides[index];
 
   return (
-    <div className={`relative mx-auto ${styles.wrapper} overflow-hidden rounded-3xl border border-line bg-white shadow-[0_16px_40px_rgba(26,35,46,0.08)] ring-1 ring-gold/15 ${className}`}>
+    <div
+      className={`relative mx-auto ${styles.wrapper} overflow-hidden rounded-3xl border border-line bg-white shadow-[0_16px_40px_rgba(26,35,46,0.08)] ring-1 ring-gold/15 ${className}`}
+    >
       <div className={`relative w-full ${styles.aspect}`}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.src}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <img
-              src={slide.src}
-              alt={slide.alt}
-              width={1600}
-              height={700}
-              decoding="async"
-              fetchPriority={index === 0 && variant === "hero" ? "high" : "low"}
-              loading={index === 0 && variant === "hero" ? "eager" : "lazy"}
-              className="absolute inset-0 h-full w-full object-cover object-center"
-            />
-          </motion.div>
-        </AnimatePresence>
+        {slides.map((item, i) => (
+          <img
+            key={item.src}
+            src={item.src}
+            alt={item.alt}
+            width={1600}
+            height={700}
+            decoding={i === 0 ? "sync" : "async"}
+            fetchPriority={i === 0 && variant === "hero" ? "high" : "low"}
+            loading={i === 0 && variant === "hero" ? "eager" : "lazy"}
+            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${
+              i === index ? "opacity-100" : "pointer-events-none opacity-0"
+            }`}
+          />
+        ))}
 
         <div className="hero-mirror-overlay" />
         <div className="hero-mirror-shine" />
@@ -96,37 +92,45 @@ export default function ImageBannerSlider({
           {slide.caption}
         </p>
 
-        <button
-          type="button"
-          onClick={prev}
-          className={`absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:left-4 ${styles.arrow}`}
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={styles.arrowIcon} />
-        </button>
-        <button
-          type="button"
-          onClick={next}
-          className={`absolute right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:right-4 ${styles.arrow}`}
-          aria-label="Next slide"
-        >
-          <ChevronRight size={styles.arrowIcon} />
-        </button>
+        {slides.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              className={`absolute left-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:left-4 ${styles.arrow}`}
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={styles.arrowIcon} />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className={`absolute right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/85 text-navy shadow-md backdrop-blur-md transition hover:bg-white sm:right-4 ${styles.arrow}`}
+              aria-label="Next slide"
+            >
+              <ChevronRight size={styles.arrowIcon} />
+            </button>
+          </>
+        )}
       </div>
 
-      <div className="absolute bottom-5 right-5 z-10 flex gap-2 sm:right-6">
-        {slides.map((s, i) => (
-          <button
-            key={s.src}
-            type="button"
-            onClick={() => setIndex(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`rounded-full transition-all ${styles.dot} ${
-              i === index ? `${styles.dotActive} bg-orange` : `${styles.dotInactive} bg-white/50 hover:bg-white/90`
-            }`}
-          />
-        ))}
-      </div>
+      {slides.length > 1 && (
+        <div className="absolute bottom-5 right-5 z-10 flex gap-2 sm:right-6">
+          {slides.map((s, i) => (
+            <button
+              key={s.src}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`rounded-full transition-all ${styles.dot} ${
+                i === index
+                  ? `${styles.dotActive} bg-orange`
+                  : `${styles.dotInactive} bg-white/50 hover:bg-white/90`
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -149,7 +153,6 @@ export const manchesterSlides = [
   },
 ] as const;
 
-/** Bottom showcase slider — Universal Square campus (from Pics/) */
 export const campusSlides = [
   {
     src: "/manchester/campus-01.webp",

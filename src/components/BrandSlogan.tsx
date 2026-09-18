@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { site } from "@/data/msbt";
 
 type BrandSloganProps = {
@@ -13,13 +12,10 @@ export default function BrandSlogan({
   const isHero = variant === "hero";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, delay: 0.08 }}
+    <div
       className={`flex flex-col items-center ${className}`}
       role="doc-subtitle"
-      aria-label="EDUCATE - EMPOWER - EXCEL"
+      aria-label={site.slogan}
     >
       <div
         className={`flex items-center justify-center gap-3 sm:gap-4 ${
@@ -56,12 +52,6 @@ export default function BrandSlogan({
           aria-hidden
         />
       </div>
-      {isHero && (
-        <span
-          className="mt-3 h-0.5 w-20 rounded-full bg-gradient-to-r from-transparent via-gold to-transparent sm:w-28"
-          aria-hidden
-        />
-      )}
-    </motion.div>
+    </div>
   );
 }

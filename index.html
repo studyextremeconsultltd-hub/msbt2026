@@ -9,7 +9,7 @@
       name="description"
       content="Manchester School of Business and Technology — study business, health & social care and psychology online, on your schedule."
     />
-    <meta name="theme-color" content="#1a232e" />
+    <meta name="theme-color" content="#f7f5f0" />
     <link rel="canonical" href="https://msbt.co.uk/" />
 
     <meta property="og:type" content="website" />
@@ -20,27 +20,28 @@
       content="Your career, your pace, your future. Flexible online programmes with professional accreditation."
     />
     <meta property="og:url" content="https://msbt.co.uk/" />
-    <meta property="og:image" content="https://msbt.co.uk/brand/msbt-logo.png" />
+    <meta property="og:image" content="https://msbt.co.uk/brand/msbt-logo.webp" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- LCP hero image — no third-party font blocking -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
+      rel="preload"
+      as="image"
+      href="/manchester/manchester-spinningfields.webp"
+      fetchpriority="high"
     />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
+    <link rel="preload" as="image" href="/brand/msbt-logo.webp" />
+
     <title>MSBT | Manchester School of Business and Technology</title>
     <style>
       :root {
-        --font-inter: "Inter", system-ui, sans-serif;
-        --font-cormorant: "Cormorant Garamond", Georgia, serif;
+        --font-inter: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --font-cormorant: Georgia, "Times New Roman", Times, serif;
+      }
+      body {
+        margin: 0;
+        background: #f7f5f0;
+        color: #1a232e;
+        font-family: var(--font-inter);
       }
     </style>
   </head>

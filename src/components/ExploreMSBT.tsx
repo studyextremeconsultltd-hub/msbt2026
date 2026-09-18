@@ -6,10 +6,14 @@ const GlobeExplorer = lazy(() => import("@/components/GlobeExplorer"));
 export default function ExploreMSBT() {
   const [input, setInput] = useState("");
   const [searchLocation, setSearchLocation] = useState<string | null>(null);
+  const [mapReady, setMapReady] = useState(false);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (input.trim()) setSearchLocation(input.trim());
+    if (input.trim()) {
+      setMapReady(true);
+      setSearchLocation(input.trim());
+    }
   }
 
   return (
@@ -39,15 +43,31 @@ export default function ExploreMSBT() {
         </form>
 
         <div className="overflow-hidden rounded-3xl border border-line card-shadow">
-          <Suspense
-            fallback={
-              <div className="flex h-[420px] items-center justify-center bg-cream text-sm font-semibold text-muted md:h-[520px] lg:h-[600px]">
-                Loading map…
-              </div>
-            }
-          >
-            <GlobeExplorer searchLocation={searchLocation} />
-          </Suspense>
+          {mapReady ? (
+            <Suspense
+              fallback={
+                <div className="flex h-[420px] items-center justify-center bg-cream text-sm font-semibold text-muted md:h-[520px] lg:h-[600px]">
+                  Loading map…
+                </div>
+              }
+            >
+              <GlobeExplorer searchLocation={searchLocation} />
+            </Suspense>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setMapReady(true)}
+              className="flex h-[320px] w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-white via-cream to-peach px-6 text-center transition hover:brightness-[0.98] md:h-[420px]"
+            >
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-navy text-white shadow-lg">
+                <MapPin size={28} aria-hidden />
+              </span>
+              <span className="text-lg font-bold text-navy">Load interactive map</span>
+              <span className="max-w-md text-sm font-medium text-muted">
+                Tap to explore locations — keeps the homepage fast on mobile.
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </section>

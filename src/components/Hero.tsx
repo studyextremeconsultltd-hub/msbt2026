@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { site } from "@/data/msbt";
 import AnimatedSchoolTitle from "@/components/AnimatedSchoolTitle";
 import BrandSlogan from "@/components/BrandSlogan";
@@ -16,25 +15,15 @@ export default function Hero() {
           <HeroSideCourseColumn side="left" />
 
           <div className="w-full min-w-0 max-w-3xl flex-1">
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
-            >
+            <p className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               <span className="bg-gradient-to-r from-navy via-[#2a3544] to-gold bg-clip-text text-transparent drop-shadow-sm">
                 Welcome to {site.shortName}
               </span>
-            </motion.p>
+            </p>
 
             <BrandSlogan variant="hero" />
 
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="mx-auto mt-6 max-w-2xl text-center"
-            >
+            <div className="mx-auto mt-6 max-w-2xl text-center">
               <p className="font-display text-2xl font-bold leading-snug text-ink sm:text-3xl md:text-4xl">
                 Your career, your pace, your future.
               </p>
@@ -42,7 +31,7 @@ export default function Hero() {
                 Study business, health &amp; social care and psychology via online, on your
                 schedule, without putting your life on hold.
               </p>
-            </motion.div>
+            </div>
 
             <div className="mt-8">
               <AnimatedSchoolTitle text={site.name} />

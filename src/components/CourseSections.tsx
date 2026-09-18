@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ImageBannerSlider, { manchesterSlides } from "@/components/ImageBannerSlider";
+import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider";
 import { categories, courses, formatGBP } from "@/data/msbt";
 
 const bubbles = [
@@ -48,7 +48,7 @@ export function LightStudentScene() {
         </div>
 
         <div className="relative w-full">
-          <ImageBannerSlider slides={manchesterSlides} variant="showcase" />
+          <ImageBannerSlider slides={campusSlides} variant="showcase" />
           <div className="mt-4 grid grid-cols-2 gap-3">
             {bubbles.map((text) => (
               <div

@@ -12,8 +12,8 @@ const csp = [
   "object-src 'none'",
   "script-src 'self' 'unsafe-eval' blob:",
   "worker-src 'self' blob:",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
   "img-src 'self' data: blob: https:",
   "frame-src 'self' https://maps.google.com https://www.google.com https://www.google.com/maps",
   "connect-src 'self' https://nominatim.openstreetmap.org https://*.tile.openstreetmap.org https://demotiles.maplibre.org https://*",
@@ -49,7 +49,6 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules/maplibre-gl")) return "maplibre";
-          if (id.includes("node_modules/framer-motion")) return "motion";
           if (id.includes("node_modules/react-dom") || id.includes("node_modules/react/")) {
             return "react-vendor";
           }

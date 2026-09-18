@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { courses } from "@/data/msbt";
 
 const COLUMN_CONFIG = {
-  left: { offsets: [0, 2, 4], label: "Business", rotateMs: 3400 },
-  right: { offsets: [1, 3, 5], label: "Programmes", rotateMs: 3600 },
+  left: { offsets: [0, 2, 4], label: "Business", rotateMs: 4000 },
+  right: { offsets: [1, 3, 5], label: "Programmes", rotateMs: 4200 },
 } as const;
 
 function CoursePill({ courseIndex }: { courseIndex: number }) {
@@ -33,6 +32,7 @@ export function HeroSideCourseColumn({ side }: { side: "left" | "right" }) {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => setTick((t) => t + 1), config.rotateMs);
     return () => clearInterval(id);
   }, [config.rotateMs]);
@@ -47,19 +47,7 @@ export function HeroSideCourseColumn({ side }: { side: "left" | "right" }) {
       <div className="flex flex-col gap-3">
         {config.offsets.map((offset, row) => {
           const courseIndex = (tick + offset) % courses.length;
-          return (
-            <AnimatePresence mode="wait" key={row}>
-              <motion.div
-                key={`${row}-${courseIndex}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.35 }}
-              >
-                <CoursePill courseIndex={courseIndex} />
-              </motion.div>
-            </AnimatePresence>
-          );
+          return <CoursePill key={`${row}-${courseIndex}`} courseIndex={courseIndex} />;
         })}
       </div>
     </aside>

@@ -1,11 +1,23 @@
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function AnimatedSchoolTitle({ text }: { text: string }) {
   const [charIndex, setCharIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
+  const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setCharIndex(text.length);
+      return;
+    }
+    // Defer typing until after first paint / idle to protect LCP & TBT
+    const start = window.setTimeout(() => setAnimate(true), 1200);
+    return () => window.clearTimeout(start);
+  }, [text.length]);
+
+  useEffect(() => {
+    if (!animate) return;
     let timer: ReturnType<typeof setTimeout>;
 
     if (!deleting && charIndex < text.length) {
@@ -19,13 +31,12 @@ export default function AnimatedSchoolTitle({ text }: { text: string }) {
     }
 
     return () => clearTimeout(timer);
-  }, [charIndex, deleting, text]);
+  }, [animate, charIndex, deleting, text]);
 
-  const displayed = text.slice(0, charIndex);
+  const displayed = animate ? text.slice(0, charIndex) : text;
 
   return (
     <div className="relative w-full">
-      {/* Invisible full title reserves height so the enquiry form stays static */}
       <h1
         className="pointer-events-none text-center font-display text-2xl font-bold leading-snug text-transparent sm:text-3xl md:text-4xl"
         aria-hidden
@@ -36,10 +47,8 @@ export default function AnimatedSchoolTitle({ text }: { text: string }) {
         <span className="sr-only">{text}</span>
         <span aria-hidden>
           {displayed}
-          <motion.span
-            className="ml-0.5 inline-block w-[3px] bg-orange align-middle"
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ duration: 0.6, repeat: Infinity }}
+          <span
+            className="ml-0.5 inline-block w-[3px] animate-pulse bg-orange align-middle"
             style={{ height: "0.85em" }}
           />
         </span>
