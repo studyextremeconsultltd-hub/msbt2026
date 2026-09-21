@@ -10,10 +10,11 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { courses, enrollableCourses, formatGBP } from "@/data/msbt";
+import { enrollableCourses, formatGBP } from "@/data/msbt";
 import {
-  startStripeCheckout,
+  startCheckout,
   type CheckoutPaymentOption,
+  type CheckoutProvider,
 } from "@/lib/checkout";
 import { PaymentBrandRow } from "@/components/PaymentBrands";
 
@@ -28,7 +29,7 @@ export default function Pay() {
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [method, setMethod] = useState<"stripe" | "paypal">("stripe");
+  const [method, setMethod] = useState<CheckoutProvider>("stripe");
 
   const course = useMemo(
     () => payableCourses.find((item) => item.slug === courseSlug) ?? payableCourses[0],
@@ -65,19 +66,10 @@ export default function Pay() {
 
     setLoading(true);
     try {
-      if (method === "paypal") {
-        const subject = encodeURIComponent(`PayPal payment — ${course.title}`);
-        const body = encodeURIComponent(
-          `Hello MSBT Admissions,\n\nI would like to pay via PayPal.\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nPhone: ${phone.trim()}\nCourse: ${course.title}\nOption: ${paymentOption}\nAmount: ${formatGBP(amount)}\n\nPlease send a PayPal payment request.\n`,
-        );
-        window.location.href = `mailto:naveed.rehman@msbt.co.uk?subject=${subject}&body=${body}`;
-        setLoading(false);
-        return;
-      }
-
-      const checkoutUrl = await startStripeCheckout({
+      const checkoutUrl = await startCheckout({
         courseSlug: course.slug,
         paymentOption,
+        provider: method,
         customerEmail: email.trim(),
         customerName: name.trim(),
         customerPhone: phone.trim(),
@@ -109,9 +101,10 @@ export default function Pay() {
             Pay your MSBT course fee
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted md:text-base">
-            Enter your details, confirm your programme and pay securely with{" "}
-            <strong className="text-ink">Stripe</strong> or request a{" "}
-            <strong className="text-ink">PayPal</strong> invoice from Admissions.
+            Enter your details, confirm your programme, then continue to the{" "}
+            <strong className="text-ink">official Stripe</strong> or{" "}
+            <strong className="text-ink">official PayPal</strong> website to pay
+            securely. Card and PayPal details are never entered on the MSBT site.
           </p>
           <div className="mt-4 flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-2xl border border-accent-blue/20 bg-[#f0f8fd] px-4 py-2.5 shadow-sm">
@@ -167,8 +160,8 @@ export default function Pay() {
               <div className="mt-2 grid gap-3 sm:grid-cols-2">
                 {(
                   [
-                    ["stripe", "Stripe", "Card checkout (Visa, Mastercard, Amex)"],
-                    ["paypal", "PayPal", "Request a PayPal invoice from Admissions"],
+                    ["stripe", "Stripe", "Opens checkout.stripe.com — cards & wallets"],
+                    ["paypal", "PayPal", "Opens paypal.com — pay with your PayPal balance or linked card"],
                   ] as const
                 ).map(([value, label, description]) => (
                   <label
@@ -336,11 +329,11 @@ export default function Pay() {
                   <span className="font-extrabold">
                     {loading
                       ? method === "paypal"
-                        ? "Opening email…"
-                        : "Preparing Stripe Checkout…"
+                        ? "Opening PayPal…"
+                        : "Opening Stripe…"
                       : method === "paypal"
-                        ? `Request PayPal for ${formatGBP(amount)}`
-                        : `Continue to pay ${formatGBP(amount)}`}
+                        ? `Continue to PayPal — ${formatGBP(amount)}`
+                        : `Continue to Stripe — ${formatGBP(amount)}`}
                   </span>
                   {!loading && <ArrowRight className="h-5 w-5" />}
                 </span>
@@ -371,15 +364,15 @@ export default function Pay() {
           <div className="space-y-3 text-sm text-muted">
             <p className="flex items-start gap-2">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              Card details are entered securely on Stripe, not stored by MSBT.
+              You complete payment on Stripe or PayPal’s official website — MSBT never stores card details.
             </p>
             <p className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              The checkout amount is validated securely by the MSBT payment server.
+              The amount is fixed by the MSBT payment server before you leave this site.
             </p>
             <p className="flex items-start gap-2">
               <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              Payment is processed in GBP through an encrypted connection.
+              Funds go directly to MSBT’s Stripe or PayPal merchant account in GBP.
             </p>
           </div>
         </aside>

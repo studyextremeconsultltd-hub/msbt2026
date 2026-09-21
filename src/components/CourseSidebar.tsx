@@ -7,8 +7,9 @@ import {
   saveAmount,
   site,
 } from "@/data/msbt";
-import { startStripeCheckout } from "@/lib/checkout";
+import { startCheckout, type CheckoutProvider } from "@/lib/checkout";
 import { submitEnquiry } from "@/lib/enquiry";
+import { PayPalIcon, StripeIcon } from "@/components/PaymentBrands";
 
 type PaymentOption = "fast" | "full" | "instalment";
 
@@ -19,6 +20,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
   const [selectedCourse, setSelectedCourse] = useState(course.slug);
   const [company, setCompany] = useState("");
   const [payment, setPayment] = useState<PaymentOption>("fast");
+  const [provider, setProvider] = useState<CheckoutProvider>("stripe");
   const [submitted, setSubmitted] = useState(false);
   const [enquiryLoading, setEnquiryLoading] = useState(false);
   const [enquiryError, setEnquiryError] = useState("");
@@ -74,11 +76,13 @@ export default function CourseSidebar({ course }: { course: Course }) {
 
     setCheckoutLoading(true);
     try {
-      const checkoutUrl = await startStripeCheckout({
+      const checkoutUrl = await startCheckout({
         courseSlug: course.slug,
         paymentOption: payment === "instalment" ? "deposit" : "full",
+        provider,
         customerEmail: email.trim(),
         customerName: name.trim(),
+        customerPhone: phone.trim(),
       });
       window.location.assign(checkoutUrl);
     } catch (error) {
@@ -264,6 +268,29 @@ export default function CourseSidebar({ course }: { course: Course }) {
               {label}
             </label>
           ))}
+          <p className="pt-2 text-sm font-medium text-ink">Pay with</p>
+          <div className="grid grid-cols-2 gap-2">
+            {(
+              [
+                ["stripe", "Stripe", StripeIcon],
+                ["paypal", "PayPal", PayPalIcon],
+              ] as const
+            ).map(([val, label, Icon]) => (
+              <button
+                key={val}
+                type="button"
+                onClick={() => setProvider(val)}
+                className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-bold transition ${
+                  provider === val
+                    ? "border-accent-blue bg-accent-blue/10 text-accent-blue-deep ring-2 ring-accent-blue/20"
+                    : "border-line text-ink hover:border-accent-blue/40"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </button>
+            ))}
+          </div>
           <div className="rounded-xl bg-[#f5f5f5] p-3">
             <span className="text-sm line-through text-muted">
               {formatGBP(pricing.regular)}
@@ -308,15 +335,15 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 </span>
                 <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/95">
                   <LockKeyhole className="h-3 w-3" aria-hidden="true" />
-                  PayPal &amp; Stripe accepted
+                  Opens official {provider === "paypal" ? "PayPal" : "Stripe"} checkout
                 </span>
               </span>
             </span>
           </button>
           <p className="text-center text-xs text-muted">
             {payment === "instalment"
-              ? "Pay the initial deposit securely. Admissions will arrange the remaining monthly instalments."
-              : "Card payments via Stripe. PayPal invoices available on request from Admissions."}
+              ? "Pay the initial deposit on Stripe or PayPal. Admissions will arrange remaining instalments."
+              : `You will be redirected to the official ${provider === "paypal" ? "PayPal" : "Stripe"} website to complete payment.`}
           </p>
         </div>
       </div>

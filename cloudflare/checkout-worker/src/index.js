@@ -1,8 +1,13 @@
 /**
- * MSBT Stripe Checkout Worker
+ * MSBT Checkout Worker — Stripe + PayPal
  *
- * Secret (set with Wrangler, never commit it):
+ * Secrets (never commit):
  *   npx wrangler secret put STRIPE_SECRET_KEY
+ *   npx wrangler secret put PAYPAL_CLIENT_ID
+ *   npx wrangler secret put PAYPAL_CLIENT_SECRET
+ *
+ * Optional var:
+ *   PAYPAL_MODE = "live" | "sandbox"  (default live)
  */
 
 const COURSES = {
@@ -58,7 +63,7 @@ function allowedOrigin(request, env) {
   try {
     if (origin && origin === new URL(env.SITE_URL).origin) return origin;
   } catch {
-    // SITE_URL is validated again when return URLs are created.
+    // ignore
   }
   return "";
 }
@@ -87,6 +92,15 @@ function stripeConfigured(secret) {
   return /^sk_(live|test)_/.test((secret || "").trim());
 }
 
+function paypalConfigured(env) {
+  return Boolean((env.PAYPAL_CLIENT_ID || "").trim() && (env.PAYPAL_CLIENT_SECRET || "").trim());
+}
+
+function paypalApiBase(env) {
+  const mode = String(env.PAYPAL_MODE || "live").toLowerCase();
+  return mode === "sandbox" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com";
+}
+
 function cleanText(value, maxLength) {
   return String(value || "").trim().slice(0, maxLength);
 }
@@ -103,50 +117,61 @@ function returnSiteUrl(origin, env) {
   }
 }
 
-async function createCheckout(request, env, origin) {
-  const contentLength = Number(request.headers.get("Content-Length") || 0);
-  if (contentLength > 16_384) {
-    return json({ status: "error", message: "Request is too large." }, 413, origin);
-  }
-
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ status: "error", message: "Invalid request." }, 400, origin);
-  }
-
+function parseCheckoutBody(body) {
   const courseSlug = cleanText(body.courseSlug, 100);
   const course = COURSES[courseSlug];
-  if (!course) {
-    return json({ status: "error", message: "This course is not available for checkout." }, 400, origin);
-  }
-
   const customerEmail = cleanText(body.customerEmail, 254).toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-    return json({ status: "error", message: "Enter a valid email address before paying." }, 400, origin);
-  }
-
   const paymentOption = body.paymentOption === "deposit" ? "deposit" : "full";
-  const amount = course[paymentOption];
-  const amountPence = Math.round(amount * 100);
+  const provider = body.provider === "paypal" ? "paypal" : "stripe";
   const customerName = cleanText(body.customerName, 120);
   const customerPhone = cleanText(body.customerPhone, 40);
-  const requestId = crypto.randomUUID();
-  const siteUrl = returnSiteUrl(origin, env);
-  const secret = (env.STRIPE_SECRET_KEY || "").trim();
 
+  return {
+    courseSlug,
+    course,
+    customerEmail,
+    paymentOption,
+    provider,
+    customerName,
+    customerPhone,
+    amount: course ? course[paymentOption] : 0,
+  };
+}
+
+async function getPayPalAccessToken(env) {
+  const auth = btoa(`${env.PAYPAL_CLIENT_ID.trim()}:${env.PAYPAL_CLIENT_SECRET.trim()}`);
+  const response = await fetch(`${paypalApiBase(env)}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${auth}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+  const data = await response.json();
+  if (!response.ok || !data.access_token) {
+    throw new Error(data?.error_description || "PayPal auth failed");
+  }
+  return data.access_token;
+}
+
+async function createStripeCheckout(parsed, env, origin, requestId) {
+  const secret = (env.STRIPE_SECRET_KEY || "").trim();
   if (!stripeConfigured(secret)) {
     return json(
       {
         status: "error",
-        message: "Secure checkout is being configured. Please contact admissions.",
+        message: "Stripe checkout is being configured. Please contact admissions.",
       },
       503,
       origin,
     );
   }
 
+  const { course, courseSlug, paymentOption, customerEmail, customerName, customerPhone, amount } =
+    parsed;
+  const amountPence = Math.round(amount * 100);
+  const siteUrl = returnSiteUrl(origin, env);
   const params = new URLSearchParams();
   const label = paymentOption === "deposit" ? "Initial deposit" : "Full course payment";
 
@@ -219,7 +244,201 @@ async function createCheckout(request, env, origin) {
     }),
   );
 
-  return json({ status: "success", url: stripeData.url }, 200, origin);
+  return json({ status: "success", provider: "stripe", url: stripeData.url }, 200, origin);
+}
+
+async function createPayPalCheckout(parsed, env, origin, requestId, workerOrigin) {
+  if (!paypalConfigured(env)) {
+    return json(
+      {
+        status: "error",
+        message: "PayPal checkout is being configured. Please contact admissions or pay with Stripe.",
+      },
+      503,
+      origin,
+    );
+  }
+
+  const { course, courseSlug, paymentOption, customerEmail, customerName, customerPhone, amount } =
+    parsed;
+  const siteUrl = returnSiteUrl(origin, env);
+  const label = paymentOption === "deposit" ? "Initial deposit" : "Full course payment";
+  const value = amount.toFixed(2);
+
+  let accessToken;
+  try {
+    accessToken = await getPayPalAccessToken(env);
+  } catch (error) {
+    console.error(JSON.stringify({ event: "paypal_auth_failed", requestId, error: String(error) }));
+    return json({ status: "error", message: "PayPal authentication failed." }, 502, origin);
+  }
+
+  const orderPayload = {
+    intent: "CAPTURE",
+    purchase_units: [
+      {
+        reference_id: courseSlug.slice(0, 64),
+        description: `${course.title} — ${label}`.slice(0, 127),
+        custom_id: `${paymentOption}:${requestId}`.slice(0, 127),
+        amount: {
+          currency_code: "GBP",
+          value,
+        },
+      },
+    ],
+    payer: {
+      email_address: customerEmail,
+      ...(customerName
+        ? {
+            name: {
+              given_name: customerName.split(/\s+/)[0]?.slice(0, 140) || "Student",
+              surname: customerName.split(/\s+/).slice(1).join(" ").slice(0, 140) || "MSBT",
+            },
+          }
+        : {}),
+    },
+    application_context: {
+      brand_name: "MSBT",
+      landing_page: "LOGIN",
+      user_action: "PAY_NOW",
+      shipping_preference: "NO_SHIPPING",
+      return_url: `${workerOrigin}/api/checkout/paypal/return?course=${encodeURIComponent(courseSlug)}`,
+      cancel_url: `${siteUrl}/courses/${courseSlug}?checkout=cancel`,
+    },
+  };
+
+  if (customerPhone) {
+    orderPayload.purchase_units[0].custom_id = `${paymentOption}:${customerPhone}:${requestId}`.slice(
+      0,
+      127,
+    );
+  }
+
+  let orderResponse;
+  try {
+    orderResponse = await fetch(`${paypalApiBase(env)}/v2/checkout/orders`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "PayPal-Request-Id": requestId,
+      },
+      body: JSON.stringify(orderPayload),
+    });
+  } catch (error) {
+    console.error(JSON.stringify({ event: "paypal_order_fetch_failed", requestId, error: String(error) }));
+    return json({ status: "error", message: "PayPal checkout is temporarily unavailable." }, 502, origin);
+  }
+
+  const orderData = await orderResponse.json();
+  const approve = Array.isArray(orderData.links)
+    ? orderData.links.find((link) => link.rel === "approve")
+    : null;
+
+  if (!orderResponse.ok || !approve?.href) {
+    console.error(
+      JSON.stringify({
+        event: "paypal_order_failed",
+        requestId,
+        status: orderResponse.status,
+        name: orderData?.name,
+      }),
+    );
+    return json({ status: "error", message: "PayPal checkout could not be started." }, 502, origin);
+  }
+
+  console.log(
+    JSON.stringify({
+      event: "paypal_order_created",
+      requestId,
+      courseSlug,
+      paymentOption,
+      amount: value,
+      orderId: orderData.id,
+    }),
+  );
+
+  return json({ status: "success", provider: "paypal", url: approve.href }, 200, origin);
+}
+
+async function createCheckout(request, env, origin) {
+  const contentLength = Number(request.headers.get("Content-Length") || 0);
+  if (contentLength > 16_384) {
+    return json({ status: "error", message: "Request is too large." }, 413, origin);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ status: "error", message: "Invalid request." }, 400, origin);
+  }
+
+  const parsed = parseCheckoutBody(body);
+  if (!parsed.course) {
+    return json({ status: "error", message: "This course is not available for checkout." }, 400, origin);
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parsed.customerEmail)) {
+    return json({ status: "error", message: "Enter a valid email address before paying." }, 400, origin);
+  }
+
+  const requestId = crypto.randomUUID();
+  const workerOrigin = new URL(request.url).origin;
+
+  if (parsed.provider === "paypal") {
+    return createPayPalCheckout(parsed, env, origin, requestId, workerOrigin);
+  }
+  return createStripeCheckout(parsed, env, origin, requestId);
+}
+
+async function capturePayPalReturn(request, env) {
+  const url = new URL(request.url);
+  const token = cleanText(url.searchParams.get("token"), 64);
+  const courseSlug = cleanText(url.searchParams.get("course"), 100);
+  const siteUrl = returnSiteUrl("", env);
+  const successPath = courseSlug
+    ? `${siteUrl}/courses/${courseSlug}?checkout=success`
+    : `${siteUrl}/pay?checkout=success`;
+  const cancelPath = courseSlug
+    ? `${siteUrl}/courses/${courseSlug}?checkout=cancel`
+    : `${siteUrl}/pay?checkout=cancel`;
+
+  if (!token || !paypalConfigured(env)) {
+    return Response.redirect(cancelPath, 302);
+  }
+
+  try {
+    const accessToken = await getPayPalAccessToken(env);
+    const captureResponse = await fetch(
+      `${paypalApiBase(env)}/v2/checkout/orders/${encodeURIComponent(token)}/capture`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const captureData = await captureResponse.json();
+    const status = captureData?.status;
+    console.log(
+      JSON.stringify({
+        event: "paypal_capture",
+        orderId: token,
+        courseSlug,
+        ok: captureResponse.ok,
+        status,
+      }),
+    );
+
+    if (captureResponse.ok && (status === "COMPLETED" || status === "APPROVED")) {
+      return Response.redirect(successPath, 302);
+    }
+  } catch (error) {
+    console.error(JSON.stringify({ event: "paypal_capture_failed", error: String(error) }));
+  }
+
+  return Response.redirect(cancelPath, 302);
 }
 
 export default {
@@ -232,11 +451,20 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
+    if (url.pathname === "/api/checkout/paypal/return" && request.method === "GET") {
+      return capturePayPalReturn(request, env);
+    }
+
     if (url.pathname === "/health" && request.method === "GET") {
-      return json({
-        status: "ok",
-        stripe_configured: stripeConfigured(env.STRIPE_SECRET_KEY),
-      }, 200, origin);
+      return json(
+        {
+          status: "ok",
+          stripe_configured: stripeConfigured(env.STRIPE_SECRET_KEY),
+          paypal_configured: paypalConfigured(env),
+        },
+        200,
+        origin,
+      );
     }
 
     if (!origin) {
