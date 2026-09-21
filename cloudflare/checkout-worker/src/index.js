@@ -6,11 +6,6 @@
  */
 
 const COURSES = {
-  "level-3-diploma-business-management": {
-    title: "Level 3 Diploma in Business Management",
-    full: 795,
-    deposit: 125,
-  },
   "level-4-diploma-business-management": {
     title: "Level 4 Diploma in Business Management",
     full: 895,
@@ -31,20 +26,10 @@ const COURSES = {
     full: 1095,
     deposit: 150,
   },
-  "level-7-diploma-strategic-management-leadership": {
-    title: "Level 7 Diploma in Strategic Management & Leadership",
-    full: 1295,
-    deposit: 195,
-  },
   "level-7-certificate-research-methods": {
     title: "Level 7 Certificate in Research Methods",
     full: 395,
     deposit: 95,
-  },
-  "level-3-foundation-health-social-care": {
-    title: "Level 3 Foundation Diploma in Health and Social Care",
-    full: 595,
-    deposit: 100,
   },
   "level-4-health-social-care-management": {
     title: "Level 4 Diploma in Health and Social Care Management",
@@ -54,11 +39,6 @@ const COURSES = {
   "level-5-extended-health-social-care-management": {
     title: "Level 5 Extended Diploma in Health and Social Care Management",
     full: 1595,
-    deposit: 195,
-  },
-  "level-7-health-social-care-management": {
-    title: "Level 7 Diploma in Health and Social Care Management",
-    full: 1295,
     deposit: 195,
   },
 };

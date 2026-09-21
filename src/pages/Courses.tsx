@@ -94,12 +94,18 @@ export default function Courses() {
                   <h2 className="mt-3 font-semibold text-ink group-hover:text-navy">{c.title}</h2>
                   <p className="mt-2 line-clamp-3 text-sm text-muted">{c.overview}</p>
                   <p className="mt-4 text-sm text-muted">{c.duration}</p>
-                  <p className="mt-2 font-bold text-orange">
-                    {formatGBP(c.pricing.discounted)}{" "}
-                    <span className="font-normal text-muted line-through">
-                      {formatGBP(c.pricing.regular)}
-                    </span>
-                  </p>
+                  {c.proposed ? (
+                    <p className="mt-2 text-sm font-extrabold text-accent-blue-deep">
+                      Register Your Interest
+                    </p>
+                  ) : (
+                    <p className="mt-2 font-bold text-orange">
+                      {formatGBP(c.pricing.discounted)}{" "}
+                      <span className="font-normal text-muted line-through">
+                        {formatGBP(c.pricing.regular)}
+                      </span>
+                    </p>
+                  )}
                 </div>
               </Link>
             ))}

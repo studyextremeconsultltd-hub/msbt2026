@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider";
-import { categories, courses, formatGBP } from "@/data/msbt";
+import { categories, enrollableCourses, formatGBP } from "@/data/msbt";
 
 const bubbles = [
   "Flexible online study",
@@ -66,7 +66,8 @@ export function LightStudentScene() {
 }
 
 export function CourseGrid({ limit }: { limit?: number }) {
-  const list = limit ? courses.slice(0, limit) : courses;
+  const available = enrollableCourses();
+  const list = limit ? available.slice(0, limit) : available;
 
   return (
     <section className="bg-white py-16 lg:py-20">
@@ -77,7 +78,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
               Search for a course
             </p>
             <h2 className="mt-3 font-display text-4xl font-bold text-ink md:text-5xl">
-              Programmes at every level
+              Open programmes
             </h2>
           </div>
           <Link
@@ -103,7 +104,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
                   height={360}
                   loading="lazy"
                   decoding="async"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-navy/30" />
@@ -149,7 +150,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
                   {c.tags.slice(0, 2).map((t) => (
                     <span
                       key={t}
-                      className="rounded-full bg-white px-3 py-1 text-sm font-bold text-navy"
+                      className="rounded-full bg-[#f5f5f5] px-3 py-1 text-sm font-bold text-navy"
                     >
                       {t}
                     </span>

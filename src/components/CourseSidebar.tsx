@@ -46,7 +46,9 @@ export default function CourseSidebar({ course }: { course: Course }) {
         email: email.trim(),
         phone: phone.trim(),
         programme: programmeTitle,
-        message: `Course page enquiry for ${programmeTitle}.`,
+        message: course.proposed
+          ? `Register interest (proposed OTHM) for ${programmeTitle}.`
+          : `Course page enquiry for ${programmeTitle}.`,
         company,
       });
       setSubmitted(true);
@@ -93,9 +95,17 @@ export default function CourseSidebar({ course }: { course: Course }) {
     <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
       {/* Box 1 — Enquiry */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">
-        <h3 className="font-semibold text-ink">Course Enquiry</h3>
+        <h3 className="font-semibold text-ink">
+          {course.proposed ? "Register Your Interest" : "Course Enquiry"}
+        </h3>
         <p className="mt-1 text-xs text-muted">
-          All fields marked <span className="text-red-500">*</span> must be completed.
+          {course.proposed
+            ? "Express interest only — this programme is not open for enrolment yet."
+            : (
+              <>
+                All fields marked <span className="text-red-500">*</span> must be completed.
+              </>
+            )}
         </p>
         {submitted ? (
           <p className="mt-4 rounded-xl bg-teal/10 p-4 text-sm text-teal">
@@ -124,7 +134,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="First Name"
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-navy"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-accent-blue"
               />
             </div>
             <div>
@@ -136,7 +146,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-navy"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-accent-blue"
               />
             </div>
             <div>
@@ -150,15 +160,15 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Address"
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-navy"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-accent-blue"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-ink">Course Enquiry</label>
+              <label className="text-xs font-medium text-ink">Programme</label>
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-navy"
+                className="mt-1 w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-accent-blue"
               >
                 {allCourses.map((c) => (
                   <option key={c.slug} value={c.slug}>
@@ -175,14 +185,20 @@ export default function CourseSidebar({ course }: { course: Course }) {
             <button
               type="submit"
               disabled={enquiryLoading}
-              className="w-full rounded-xl bg-navy py-2.5 text-sm font-semibold text-white hover:bg-navy/90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full rounded-xl bg-accent-blue py-2.5 text-sm font-extrabold text-white shadow-md shadow-accent-blue/30 hover:bg-accent-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {enquiryLoading ? "Sending…" : "Submit Enquiry"}
+              {enquiryLoading
+                ? "Sending…"
+                : course.proposed
+                  ? "Register Your Interest"
+                  : "Submit Enquiry"}
             </button>
           </form>
         )}
       </div>
 
+      {!course.proposed && (
+      <>
       {/* Box 2 — Payment Details */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">
         <h3 className="font-semibold text-ink">Course Payment Details</h3>
@@ -215,8 +231,8 @@ export default function CourseSidebar({ course }: { course: Course }) {
 
       {/* Box 3 — Enrol Now */}
       <div className="overflow-hidden rounded-2xl border border-line bg-white card-shadow">
-        <div className="border-b border-line bg-cream px-5 py-3">
-          <h3 className="font-semibold text-navy">Enrol Now</h3>
+        <div className="border-b border-line bg-[#f5f5f5] px-5 py-3">
+          <h3 className="font-semibold text-navy">Pay course fee</h3>
         </div>
         <div className="space-y-4 p-5">
           {checkoutResult === "success" && (
@@ -243,12 +259,12 @@ export default function CourseSidebar({ course }: { course: Course }) {
                 name="payment"
                 checked={payment === val}
                 onChange={() => setPayment(val)}
-                className="accent-navy"
+                className="accent-accent-blue"
               />
               {label}
             </label>
           ))}
-          <div className="rounded-xl bg-cream p-3">
+          <div className="rounded-xl bg-[#f5f5f5] p-3">
             <span className="text-sm line-through text-muted">
               {formatGBP(pricing.regular)}
             </span>{" "}
@@ -272,7 +288,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
             type="button"
             onClick={handleCheckout}
             disabled={checkoutLoading}
-            className="group relative isolate w-full overflow-hidden rounded-2xl bg-gradient-to-r from-orange via-[#ff7a18] to-teal px-5 py-4 text-white shadow-[0_12px_30px_rgba(239,108,0,0.32)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(0,122,120,0.35)] focus:outline-none focus-visible:ring-4 focus-visible:ring-orange/30 disabled:cursor-wait disabled:opacity-70"
+            className="group relative isolate w-full overflow-hidden rounded-2xl bg-gradient-to-br from-accent-blue to-accent-blue-deep px-5 py-4 text-white shadow-[0_12px_30px_rgba(75,168,232,0.4)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-blue/30 disabled:cursor-wait disabled:opacity-70"
           >
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
             <span className="relative flex items-center justify-center gap-3">
@@ -290,9 +306,9 @@ export default function CourseSidebar({ course }: { course: Course }) {
                       : `Pay Now — ${formatGBP(pricing.discounted)}`}
                   {!checkoutLoading && <Sparkles className="h-4 w-4" aria-hidden="true" />}
                 </span>
-                <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/90">
+                <span className="mt-0.5 flex items-center gap-1 text-xs font-medium text-white/95">
                   <LockKeyhole className="h-3 w-3" aria-hidden="true" />
-                  Secure checkout powered by Stripe
+                  PayPal &amp; Stripe accepted
                 </span>
               </span>
             </span>
@@ -300,10 +316,22 @@ export default function CourseSidebar({ course }: { course: Course }) {
           <p className="text-center text-xs text-muted">
             {payment === "instalment"
               ? "Pay the initial deposit securely. Admissions will arrange the remaining monthly instalments."
-              : "You will be redirected to Stripe to complete your card payment."}
+              : "Card payments via Stripe. PayPal invoices available on request from Admissions."}
           </p>
         </div>
       </div>
+      </>
+      )}
+
+      {course.proposed && (
+        <div className="rounded-2xl border border-accent-blue/25 bg-[#f0f8fd] p-5 card-shadow">
+          <h3 className="font-semibold text-accent-blue-deep">Enrolment not open</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink">
+            This is a proposed OTHM programme. Fees cannot be paid and learners cannot be
+            enrolled until MSBT receives written OTHM centre and qualification approval.
+          </p>
+        </div>
+      )}
 
       {/* Box 4 — Need More Info */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">

@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import DeferredMount from "@/components/DeferredMount";
 
+const ProposedOthmSection = lazy(() => import("@/components/ProposedOthmSection"));
 const CourseGrid = lazy(() =>
   import("@/components/CourseSections").then((m) => ({ default: m.CourseGrid })),
 );
@@ -16,7 +17,7 @@ const Footer = lazy(() => import("@/components/Footer"));
 function SectionFallback({ height }: { height: number }) {
   return (
     <div
-      className="mx-auto flex max-w-7xl items-center justify-center bg-cream text-sm font-semibold text-muted"
+      className="mx-auto flex max-w-7xl items-center justify-center bg-white text-sm font-semibold text-muted"
       style={{ minHeight: height }}
       aria-hidden
     />
@@ -25,11 +26,17 @@ function SectionFallback({ height }: { height: number }) {
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-white">
       <div className="relative">
         <Hero />
         <Navbar overlay />
       </div>
+
+      <DeferredMount minHeight={720} rootMargin="60px 0px">
+        <Suspense fallback={<SectionFallback height={720} />}>
+          <ProposedOthmSection />
+        </Suspense>
+      </DeferredMount>
 
       <DeferredMount minHeight={640} rootMargin="80px 0px">
         <Suspense fallback={<SectionFallback height={640} />}>

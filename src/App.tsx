@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
+import CookieConsent from "@/components/CookieConsent";
 
 const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
@@ -19,7 +20,7 @@ function ScrollToTop() {
 
 function PageFallback() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center bg-cream px-4" role="status">
+    <div className="flex min-h-[50vh] items-center justify-center bg-white px-4" role="status">
       <p className="text-base font-bold text-navy">Loading MSBT…</p>
     </div>
   );
@@ -40,6 +41,7 @@ function AppShell() {
           <Route path="/university-progressions" element={<UniversityProgressions />} />
         </Routes>
       </Suspense>
+      <CookieConsent />
     </>
   );
 }

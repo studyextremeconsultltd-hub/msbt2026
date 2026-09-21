@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { courses } from "@/data/msbt";
+import { enrollableCourses } from "@/data/msbt";
 
 const COLUMN_CONFIG = {
   left: {
@@ -36,7 +36,7 @@ function CoursePill({ slug, title }: { slug: string; title: string }) {
 export function HeroSideCourseColumn({ side }: { side: "left" | "right" }) {
   const config = COLUMN_CONFIG[side];
   const pool = useMemo(
-    () => courses.filter((c) => c.category === config.category),
+    () => enrollableCourses().filter((c) => c.category === config.category),
     [config.category],
   );
   const [tick, setTick] = useState(0);

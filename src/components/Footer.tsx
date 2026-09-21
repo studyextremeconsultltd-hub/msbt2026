@@ -14,7 +14,7 @@ const companyLinks = [
 ];
 
 const quickLinks = [
-  { href: "/courses", label: "Apply Now" },
+  { href: "/contact", label: "Register Interest" },
   { href: "/pay", label: "Pay Online" },
   { href: "/about#governance", label: "Terms & Conditions" },
   { href: "/contact", label: "Student Support" },

@@ -21,6 +21,11 @@ export type Course = {
   units?: string[];
   entryRequirements?: string;
   progression?: string;
+  /** Proposed OTHM programme — register interest only (not open for enrolment). */
+  proposed?: boolean;
+  credits?: number;
+  studyMode?: string;
+  awardingOrganisation?: string;
 };
 
 export const site = {
@@ -84,7 +89,11 @@ function mk(
   duration: string,
   overview: string,
   pricing: CoursePricing,
-  units?: string[]
+  units?: string[],
+  extras?: Pick<
+    Course,
+    "proposed" | "credits" | "studyMode" | "awardingOrganisation"
+  >,
 ): Course {
   return {
     slug,
@@ -97,19 +106,34 @@ function mk(
     image: assetUrl(`/courses/${slug}.webp`),
     pricing,
     units,
+    ...extras,
   };
 }
+
+/** Notice shown on all proposed OTHM programme pages (pre-approval wording). */
+export const proposedOthmNotice =
+  "Important Notice: MSBT is currently applying for OTHM Centre Approval. This programme is displayed for information and expressions of interest only. No learner will be enrolled or registered onto this qualification until MSBT has received the relevant written approval from OTHM.";
+
+export const proposedOthmIntro =
+  "Manchester School of Business & Technology (MSBT) is currently undertaking the OTHM Centre Approval process and has applied for approval to deliver the qualifications listed below. These programmes are not currently open for formal enrolment or learner registration. Availability is subject to MSBT receiving the required OTHM centre and qualification approvals.";
 
 export const courses: Course[] = [
   mk(
     "level-3-diploma-business-management",
-    "Level 3 Diploma in Business Management",
+    "OTHM Level 3 Diploma in Business Management",
     "business",
     "RQF Level 3",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "06–12 Months",
-    "A foundation in business principles for learners beginning their management career journey.",
-    { regular: 995, discounted: 795, deposit: 125, instalments: 8, instalmentAmount: 89 }
+    ["Proposed", "Register Interest", "Online"],
+    "Approximately 1 academic year",
+    "A foundation in business principles for learners beginning their management career journey. Displayed for information and expressions of interest only while MSBT completes OTHM centre approval.",
+    { regular: 995, discounted: 795, deposit: 125, instalments: 8, instalmentAmount: 89 },
+    undefined,
+    {
+      proposed: true,
+      credits: 60,
+      studyMode: "Proposed Online/Distance Learning",
+      awardingOrganisation: "OTHM Qualifications",
+    },
   ),
   mk(
     "level-4-diploma-business-management",
@@ -161,13 +185,20 @@ export const courses: Course[] = [
   ),
   mk(
     "level-7-diploma-strategic-management-leadership",
-    "Level 7 Diploma in Strategic Management & Leadership",
+    "OTHM Level 7 Diploma in Strategic Management and Leadership",
     "business",
     "RQF Level 7",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "09–12 Months",
-    "Executive-level strategic management and leadership for directors and senior managers.",
-    { regular: 1550, discounted: 1295, deposit: 195, instalments: 11, instalmentAmount: 105 }
+    ["Proposed", "Register Interest", "120 Credits"],
+    "Approximately 1 academic year",
+    "Executive-level strategic management and leadership (120 credits / 1,200 TQT / 600 GLH). Displayed for information and expressions of interest only while MSBT completes OTHM centre approval.",
+    { regular: 1550, discounted: 1295, deposit: 195, instalments: 11, instalmentAmount: 105 },
+    undefined,
+    {
+      proposed: true,
+      credits: 120,
+      studyMode: "Proposed Online/Distance Learning",
+      awardingOrganisation: "OTHM Qualifications",
+    },
   ),
   mk(
     "level-7-certificate-research-methods",
@@ -181,12 +212,12 @@ export const courses: Course[] = [
   ),
   mk(
     "level-3-foundation-health-social-care",
-    "Level 3 Foundation Diploma in Health and Social Care",
+    "OTHM Level 3 Foundation Diploma in Health and Social Care",
     "health",
     "RQF Level 3",
-    ["Online", "Fast Track", "No Exams", "Ofqual Regulated"],
-    "06–12 Months",
-    "Equip learners with underpinning knowledge for a career at support worker, senior support worker or care assistant level. 100% assignment-based with no examinations.",
+    ["Proposed", "Register Interest", "Online"],
+    "Approximately 1 academic year",
+    "Equip learners with underpinning knowledge for a career at support worker, senior support worker or care assistant level. Displayed for information and expressions of interest only while MSBT completes OTHM centre approval.",
     { regular: 750, discounted: 595, deposit: 100, instalments: 6, instalmentAmount: 89 },
     [
       "Responsibilities of a Health and Social Care worker (10 credits)",
@@ -195,7 +226,13 @@ export const courses: Course[] = [
       "Health, Safety and Wellbeing in Settings (10 credits)",
       "Person-centred Approaches (10 credits)",
       "Effective Handling of Information (10 credits)",
-    ]
+    ],
+    {
+      proposed: true,
+      credits: 60,
+      studyMode: "Proposed Online/Distance Learning",
+      awardingOrganisation: "OTHM Qualifications",
+    },
   ),
   mk(
     "level-4-health-social-care-management",
@@ -219,18 +256,34 @@ export const courses: Course[] = [
   ),
   mk(
     "level-7-health-social-care-management",
-    "Level 7 Diploma in Health and Social Care Management",
+    "OTHM Level 7 Diploma in Health and Social Care Management",
     "health",
     "RQF Level 7",
-    ["Online", "Fast Track", "Ofqual Regulated"],
-    "09–12 Months",
-    "Senior management qualification for health and social care executives and service directors.",
-    { regular: 1550, discounted: 1295, deposit: 195, instalments: 11, instalmentAmount: 105 }
+    ["Proposed", "Register Interest", "Online"],
+    "Approximately 1 academic year",
+    "Senior management qualification for health and social care executives and service directors. Displayed for information and expressions of interest only while MSBT completes OTHM centre approval.",
+    { regular: 1550, discounted: 1295, deposit: 195, instalments: 11, instalmentAmount: 105 },
+    undefined,
+    {
+      proposed: true,
+      credits: 120,
+      studyMode: "Proposed Online/Distance Learning",
+      awardingOrganisation: "OTHM Qualifications",
+    },
   ),
 ];
 
 export function getCourse(slug: string): Course | undefined {
   return courses.find((c) => c.slug === slug);
+}
+
+/** Courses open for fee payment (excludes proposed OTHM programmes). */
+export function enrollableCourses(): Course[] {
+  return courses.filter((c) => !c.proposed);
+}
+
+export function proposedOthmCourses(): Course[] {
+  return courses.filter((c) => c.proposed);
 }
 
 export function courseListForEnquiry(): { slug: string; title: string }[] {

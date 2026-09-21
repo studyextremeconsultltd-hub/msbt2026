@@ -10,14 +10,16 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { courses, formatGBP } from "@/data/msbt";
+import { courses, enrollableCourses, formatGBP } from "@/data/msbt";
 import {
   startStripeCheckout,
   type CheckoutPaymentOption,
 } from "@/lib/checkout";
+import { PaymentBrandRow } from "@/components/PaymentBrands";
 
 export default function Pay() {
-  const [courseSlug, setCourseSlug] = useState(courses[0]?.slug ?? "");
+  const payableCourses = useMemo(() => enrollableCourses(), []);
+  const [courseSlug, setCourseSlug] = useState(payableCourses[0]?.slug ?? "");
   const [paymentOption, setPaymentOption] =
     useState<CheckoutPaymentOption>("full");
   const [name, setName] = useState("");
@@ -26,10 +28,11 @@ export default function Pay() {
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [method, setMethod] = useState<"stripe" | "paypal">("stripe");
 
   const course = useMemo(
-    () => courses.find((item) => item.slug === courseSlug) ?? courses[0],
-    [courseSlug],
+    () => payableCourses.find((item) => item.slug === courseSlug) ?? payableCourses[0],
+    [courseSlug, payableCourses],
   );
 
   if (!course) return null;
@@ -62,6 +65,16 @@ export default function Pay() {
 
     setLoading(true);
     try {
+      if (method === "paypal") {
+        const subject = encodeURIComponent(`PayPal payment — ${course.title}`);
+        const body = encodeURIComponent(
+          `Hello MSBT Admissions,\n\nI would like to pay via PayPal.\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nPhone: ${phone.trim()}\nCourse: ${course.title}\nOption: ${paymentOption}\nAmount: ${formatGBP(amount)}\n\nPlease send a PayPal payment request.\n`,
+        );
+        window.location.href = `mailto:naveed.rehman@msbt.co.uk?subject=${subject}&body=${body}`;
+        setLoading(false);
+        return;
+      }
+
       const checkoutUrl = await startStripeCheckout({
         courseSlug: course.slug,
         paymentOption,
@@ -88,7 +101,7 @@ export default function Pay() {
         <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-orange/15 blur-3xl" />
         <div className="absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
         <div className="relative mx-auto max-w-6xl px-4 text-center lg:px-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-orange shadow-sm">
+          <span className="inline-flex items-center gap-2 rounded-full border border-accent-blue/40 bg-accent-blue/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-accent-blue-deep shadow-sm">
             <Sparkles className="h-4 w-4" />
             Secure course payment
           </span>
@@ -96,9 +109,13 @@ export default function Pay() {
             Pay your MSBT course fee
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted md:text-base">
-            Enter your details, confirm your programme and continue to Stripe’s
-            secure card-payment page.
+            Enter your details, confirm your programme and pay securely with{" "}
+            <strong className="text-ink">Stripe</strong> or request a{" "}
+            <strong className="text-ink">PayPal</strong> invoice from Admissions.
           </p>
+          <div className="mt-4 flex justify-center">
+            <PaymentBrandRow />
+          </div>
         </div>
       </section>
 
@@ -108,7 +125,7 @@ export default function Pay() {
           className="rounded-3xl border border-line bg-white p-6 shadow-[0_18px_55px_rgba(15,31,61,0.1)] md:p-8"
         >
           <div className="flex items-center gap-3 border-b border-line pb-5">
-            <span className="rounded-2xl bg-orange/10 p-3 text-orange">
+            <span className="rounded-2xl bg-accent-blue/10 p-3 text-accent-blue-deep">
               <CreditCard className="h-6 w-6" />
             </span>
             <div>
@@ -132,13 +149,52 @@ export default function Pay() {
                 }}
                 className="mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-orange focus:ring-4 focus:ring-orange/10"
               >
-                {courses.map((item) => (
+                {payableCourses.map((item) => (
                   <option key={item.slug} value={item.slug}>
                     {item.title}
                   </option>
                 ))}
               </select>
             </div>
+
+            <fieldset>
+              <legend className="text-sm font-bold text-ink">Payment method *</legend>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                {(
+                  [
+                    ["stripe", "Stripe", "Card checkout (Visa, Mastercard, Amex)"],
+                    ["paypal", "PayPal", "Request a PayPal invoice from Admissions"],
+                  ] as const
+                ).map(([value, label, description]) => (
+                  <label
+                    key={value}
+                    className={`cursor-pointer rounded-2xl border p-4 transition ${
+                      method === value
+                        ? "border-accent-blue bg-accent-blue/5 ring-2 ring-accent-blue/20"
+                        : "border-line hover:border-accent-blue/40"
+                    }`}
+                  >
+                    <span className="flex items-start gap-3">
+                      <input
+                        type="radio"
+                        name="payment-method"
+                        value={value}
+                        checked={method === value}
+                        onChange={() => {
+                          setMethod(value);
+                          setError("");
+                        }}
+                        className="mt-1 accent-accent-blue"
+                      />
+                      <span>
+                        <span className="block text-sm font-bold text-ink">{label}</span>
+                        <span className="block text-xs text-muted">{description}</span>
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
             <fieldset>
               <legend className="text-sm font-bold text-ink">Payment option *</legend>
@@ -262,19 +318,28 @@ export default function Pay() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-orange via-[#ff7a18] to-teal px-5 py-4 text-white shadow-[0_14px_34px_rgba(232,108,42,0.3)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(26,107,107,0.36)] focus:outline-none focus-visible:ring-4 focus-visible:ring-orange/25 disabled:cursor-wait disabled:opacity-70"
+              className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-accent-blue to-accent-blue-deep px-5 py-4 text-white shadow-[0_14px_34px_rgba(75,168,232,0.35)] transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-blue/25 disabled:cursor-wait disabled:opacity-70"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              <span className="relative flex items-center justify-center gap-3">
-                {loading ? (
-                  <LoaderCircle className="h-6 w-6 animate-spin" />
-                ) : (
-                  <LockKeyhole className="h-6 w-6" />
-                )}
-                <span className="font-extrabold">
-                  {loading ? "Preparing Stripe Checkout…" : `Continue to pay ${formatGBP(amount)}`}
+              <span className="relative flex flex-col items-center gap-1">
+                <span className="flex items-center justify-center gap-3">
+                  {loading ? (
+                    <LoaderCircle className="h-6 w-6 animate-spin" />
+                  ) : (
+                    <LockKeyhole className="h-6 w-6" />
+                  )}
+                  <span className="font-extrabold">
+                    {loading
+                      ? method === "paypal"
+                        ? "Opening email…"
+                        : "Preparing Stripe Checkout…"
+                      : method === "paypal"
+                        ? `Request PayPal for ${formatGBP(amount)}`
+                        : `Continue to pay ${formatGBP(amount)}`}
+                  </span>
+                  {!loading && <ArrowRight className="h-5 w-5" />}
                 </span>
-                {!loading && <ArrowRight className="h-5 w-5" />}
+                <PaymentBrandRow tone="onBlue" />
               </span>
             </button>
           </div>
