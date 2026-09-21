@@ -114,7 +114,12 @@ export default function Pay() {
             <strong className="text-ink">PayPal</strong> invoice from Admissions.
           </p>
           <div className="mt-4 flex justify-center">
-            <PaymentBrandRow />
+            <span className="inline-flex items-center gap-2 rounded-2xl border border-accent-blue/20 bg-[#f0f8fd] px-4 py-2.5 shadow-sm">
+              <PaymentBrandRow />
+              <span className="text-xs font-bold text-accent-blue-deep">
+                PayPal &amp; Stripe
+              </span>
+            </span>
           </div>
         </div>
       </section>
@@ -339,7 +344,7 @@ export default function Pay() {
                   </span>
                   {!loading && <ArrowRight className="h-5 w-5" />}
                 </span>
-                <PaymentBrandRow tone="onBlue" />
+                <PaymentBrandRow />
               </span>
             </button>
           </div>
