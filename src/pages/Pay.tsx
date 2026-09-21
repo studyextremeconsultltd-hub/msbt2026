@@ -29,7 +29,7 @@ export default function Pay() {
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [method, setMethod] = useState<CheckoutProvider>("stripe");
+  const [method, setMethod] = useState<CheckoutProvider>("paypal");
 
   const course = useMemo(
     () => payableCourses.find((item) => item.slug === courseSlug) ?? payableCourses[0],
@@ -101,11 +101,16 @@ export default function Pay() {
             Pay your MSBT course fee
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted md:text-base">
-            Enter your details, confirm your programme, then continue to the{" "}
-            <strong className="text-ink">official Stripe</strong> or{" "}
-            <strong className="text-ink">official PayPal</strong> website to pay
-            securely. Card and PayPal details are never entered on the MSBT site.
+            Course fees are paid only on the official{" "}
+            <strong className="text-ink">PayPal</strong> or{" "}
+            <strong className="text-ink">Stripe</strong> websites. Money is deposited
+            directly into the <strong className="text-ink">MSBT merchant account</strong> —
+            never into a personal student wallet or third-party middleman.
           </p>
+          <div className="mx-auto mt-4 max-w-xl rounded-2xl border border-accent-blue/25 bg-[#eef7fd] px-4 py-3 text-sm font-semibold text-accent-blue-deep">
+            PayPal is live for MSBT. Choose PayPal below to pay securely to the official
+            college account.
+          </div>
           <div className="mt-4 flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-2xl border border-accent-blue/20 bg-[#f0f8fd] px-4 py-2.5 shadow-sm">
               <PaymentBrandRow />
@@ -158,39 +163,55 @@ export default function Pay() {
             <fieldset>
               <legend className="text-sm font-bold text-ink">Payment method *</legend>
               <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                {(
-                  [
-                    ["stripe", "Stripe", "Opens checkout.stripe.com — cards & wallets"],
-                    ["paypal", "PayPal", "Opens paypal.com — pay with your PayPal balance or linked card"],
-                  ] as const
-                ).map(([value, label, description]) => (
-                  <label
-                    key={value}
-                    className={`cursor-pointer rounded-2xl border p-4 transition ${
-                      method === value
-                        ? "border-accent-blue bg-accent-blue/5 ring-2 ring-accent-blue/20"
-                        : "border-line hover:border-accent-blue/40"
-                    }`}
-                  >
-                    <span className="flex items-start gap-3">
-                      <input
-                        type="radio"
-                        name="payment-method"
-                        value={value}
-                        checked={method === value}
-                        onChange={() => {
-                          setMethod(value);
-                          setError("");
-                        }}
-                        className="mt-1 accent-accent-blue"
-                      />
-                      <span>
-                        <span className="block text-sm font-bold text-ink">{label}</span>
-                        <span className="block text-xs text-muted">{description}</span>
+                <label
+                  className={`cursor-pointer rounded-2xl border p-4 transition ${
+                    method === "paypal"
+                      ? "border-accent-blue bg-accent-blue/5 ring-2 ring-accent-blue/20"
+                      : "border-line hover:border-accent-blue/40"
+                  }`}
+                >
+                  <span className="flex items-start gap-3">
+                    <input
+                      type="radio"
+                      name="payment-method"
+                      value="paypal"
+                      checked={method === "paypal"}
+                      onChange={() => {
+                        setMethod("paypal");
+                        setError("");
+                      }}
+                      className="mt-1 accent-accent-blue"
+                    />
+                    <span>
+                      <span className="block text-sm font-bold text-ink">
+                        PayPal — MSBT official account
+                      </span>
+                      <span className="block text-xs text-muted">
+                        Opens paypal.com · funds go to MSBT merchant account
                       </span>
                     </span>
-                  </label>
-                ))}
+                  </span>
+                </label>
+                <label className="cursor-not-allowed rounded-2xl border border-line bg-[#f7f7f7] p-4 opacity-70">
+                  <span className="flex items-start gap-3">
+                    <input
+                      type="radio"
+                      name="payment-method"
+                      value="stripe"
+                      disabled
+                      checked={false}
+                      className="mt-1"
+                    />
+                    <span>
+                      <span className="block text-sm font-bold text-ink">
+                        Stripe (cards) — coming soon
+                      </span>
+                      <span className="block text-xs text-muted">
+                        Use PayPal for now so fees reach the MSBT account securely
+                      </span>
+                    </span>
+                  </span>
+                </label>
               </div>
             </fieldset>
 

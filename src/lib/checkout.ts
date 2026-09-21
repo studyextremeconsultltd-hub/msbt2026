@@ -23,9 +23,8 @@ type CheckoutResponse = {
 };
 
 const STRIPE_HOSTS = new Set(["checkout.stripe.com"]);
-const PAYPAL_HOSTS = new Set([
-  "www.paypal.com",
-  "paypal.com",
+const PAYPAL_LIVE_HOSTS = new Set(["www.paypal.com", "paypal.com"]);
+const PAYPAL_SANDBOX_HOSTS = new Set([
   "www.sandbox.paypal.com",
   "sandbox.paypal.com",
 ]);
@@ -37,10 +36,19 @@ function assertOfficialCheckoutUrl(url: string, provider: CheckoutProvider): str
   }
 
   const host = destination.hostname.toLowerCase();
-  if (provider === "stripe" && STRIPE_HOSTS.has(host)) return destination.toString();
-  if (provider === "paypal" && PAYPAL_HOSTS.has(host)) return destination.toString();
+  const isLocal =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-  throw new Error("Checkout returned an unexpected destination.");
+  if (provider === "stripe" && STRIPE_HOSTS.has(host)) return destination.toString();
+
+  if (provider === "paypal") {
+    if (PAYPAL_LIVE_HOSTS.has(host)) return destination.toString();
+    // Sandbox only allowed during local development
+    if (isLocal && PAYPAL_SANDBOX_HOSTS.has(host)) return destination.toString();
+  }
+
+  throw new Error("Checkout must open the official MSBT payment provider website.");
 }
 
 export async function startCheckout(payload: CheckoutRequest): Promise<string> {

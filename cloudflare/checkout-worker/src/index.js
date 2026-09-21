@@ -284,6 +284,8 @@ async function createPayPalCheckout(parsed, env, origin, requestId, workerOrigin
           currency_code: "GBP",
           value,
         },
+        // Soft descriptor helps the payer see MSBT on their PayPal activity
+        soft_descriptor: "MSBT FEES",
       },
     ],
     payer: {
@@ -298,7 +300,7 @@ async function createPayPalCheckout(parsed, env, origin, requestId, workerOrigin
         : {}),
     },
     application_context: {
-      brand_name: "MSBT",
+      brand_name: "Manchester School of Business and Technology",
       landing_page: "LOGIN",
       user_action: "PAY_NOW",
       shipping_preference: "NO_SHIPPING",
@@ -306,6 +308,12 @@ async function createPayPalCheckout(parsed, env, origin, requestId, workerOrigin
       cancel_url: `${siteUrl}/courses/${courseSlug}?checkout=cancel`,
     },
   };
+
+  // Optional: force settlement into a specific MSBT PayPal business email
+  const merchantEmail = cleanText(env.PAYPAL_MERCHANT_EMAIL, 254).toLowerCase();
+  if (merchantEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(merchantEmail)) {
+    orderPayload.purchase_units[0].payee = { email_address: merchantEmail };
+  }
 
   if (customerPhone) {
     orderPayload.purchase_units[0].custom_id = `${paymentOption}:${customerPhone}:${requestId}`.slice(

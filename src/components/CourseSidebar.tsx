@@ -20,7 +20,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
   const [selectedCourse, setSelectedCourse] = useState(course.slug);
   const [company, setCompany] = useState("");
   const [payment, setPayment] = useState<PaymentOption>("fast");
-  const [provider, setProvider] = useState<CheckoutProvider>("stripe");
+  const [provider, setProvider] = useState<CheckoutProvider>("paypal");
   const [submitted, setSubmitted] = useState(false);
   const [enquiryLoading, setEnquiryLoading] = useState(false);
   const [enquiryError, setEnquiryError] = useState("");
@@ -270,27 +270,31 @@ export default function CourseSidebar({ course }: { course: Course }) {
           ))}
           <p className="pt-2 text-sm font-medium text-ink">Pay with</p>
           <div className="grid grid-cols-2 gap-2">
-            {(
-              [
-                ["stripe", "Stripe", StripeIcon],
-                ["paypal", "PayPal", PayPalIcon],
-              ] as const
-            ).map(([val, label, Icon]) => (
-              <button
-                key={val}
-                type="button"
-                onClick={() => setProvider(val)}
-                className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-bold transition ${
-                  provider === val
-                    ? "border-accent-blue bg-accent-blue/10 text-accent-blue-deep ring-2 ring-accent-blue/20"
-                    : "border-line text-ink hover:border-accent-blue/40"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </button>
-            ))}
+            <button
+              type="button"
+              onClick={() => setProvider("paypal")}
+              className={`flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-bold transition ${
+                provider === "paypal"
+                  ? "border-accent-blue bg-accent-blue/10 text-accent-blue-deep ring-2 ring-accent-blue/20"
+                  : "border-line text-ink hover:border-accent-blue/40"
+              }`}
+            >
+              <PayPalIcon className="h-4 w-4" />
+              PayPal
+            </button>
+            <button
+              type="button"
+              disabled
+              title="Stripe will be enabled once the MSBT Stripe account is connected"
+              className="flex cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-line bg-[#f7f7f7] px-3 py-2.5 text-sm font-bold text-muted opacity-70"
+            >
+              <StripeIcon className="h-4 w-4" />
+              Stripe soon
+            </button>
           </div>
+          <p className="text-xs font-medium text-muted">
+            PayPal deposits fees directly into the official MSBT merchant account.
+          </p>
           <div className="rounded-xl bg-[#f5f5f5] p-3">
             <span className="text-sm line-through text-muted">
               {formatGBP(pricing.regular)}
