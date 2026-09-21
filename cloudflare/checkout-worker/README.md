@@ -43,7 +43,7 @@ Do **not** put Client ID / Secret in GitHub, chat, or frontend code.
 Defaults to:
 
 ```text
-https://msbt-checkout.studyextreme.workers.dev
+https://msbt-checkout.engr-noumanfaiz.workers.dev
 ```
 
 Override with `VITE_CHECKOUT_API_URL` at build time if the Worker URL changes.

@@ -1,6 +1,6 @@
 const checkoutApiUrl = (
   import.meta.env.VITE_CHECKOUT_API_URL ||
-  "https://msbt-checkout.studyextreme.workers.dev"
+  "https://msbt-checkout.engr-noumanfaiz.workers.dev"
 ).replace(/\/$/, "");
 
 export type CheckoutPaymentOption = "full" | "deposit";
