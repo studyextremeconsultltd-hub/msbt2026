@@ -34,7 +34,7 @@ export const site = {
   slogan: "EDUCATE - EMPOWER - EXCEL",
   tagline:
     "Your career, your pace, your future. Study Business & Management and Health & Social Care online, on your schedule.",
-  email: "naveed.rehman@msbt.co.uk",
+  email: "admissions@msbt.co.uk",
   phone: "+441615640782",
   whatsapp: "+441615640782",
   address: "Office 2.13 Business Centre, Devonshire St N, Manchester M12 6JH",

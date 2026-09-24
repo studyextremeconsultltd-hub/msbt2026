@@ -232,7 +232,7 @@ async function sendEnquiry(request, env, origin) {
     );
   }
 
-  const toEmail = cleanText(env.CONTACT_TO_EMAIL, 254) || "naveed.rehman@msbt.co.uk";
+  const toEmail = cleanText(env.CONTACT_TO_EMAIL, 254) || "admissions@msbt.co.uk";
   const fromEmail =
     cleanText(env.CONTACT_FROM_EMAIL, 200) || "MSBT Admissions <admissions@msbt.co.uk>";
   const meta = sourceMeta(parsed.type, parsed.fields);
@@ -325,7 +325,7 @@ export default {
         {
           status: "ok",
           resend_configured: resendConfigured(env.RESEND_API_KEY),
-          to: cleanText(env.CONTACT_TO_EMAIL, 254) || "naveed.rehman@msbt.co.uk",
+          to: cleanText(env.CONTACT_TO_EMAIL, 254) || "admissions@msbt.co.uk",
         },
         200,
         origin,

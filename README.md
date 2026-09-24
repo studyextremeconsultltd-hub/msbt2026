@@ -73,7 +73,7 @@ Remove old Vercel records (`cname.vercel-dns.com`, `76.76.21.21`, etc.).
 ## Contact / enquiry emails (direct delivery)
 
 Website forms no longer use `mailto`. They POST to a Cloudflare Worker which
-emails **`naveed.rehman@msbt.co.uk`** via Resend (Reply-To = visitor email).
+emails **`admissions@msbt.co.uk`** via Resend (Reply-To = visitor email).
 
 See [`cloudflare/contact-worker/README.md`](cloudflare/contact-worker/README.md).
 

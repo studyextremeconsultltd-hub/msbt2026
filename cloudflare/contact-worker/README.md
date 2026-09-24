@@ -1,6 +1,6 @@
 # MSBT Contact / Enquiry Worker
 
-Delivers website enquiries straight to **`naveed.rehman@msbt.co.uk`** via [Resend](https://resend.com).
+Delivers website enquiries straight to **`admissions@msbt.co.uk`** via [Resend](https://resend.com).
 The Resend API key never reaches the Vite frontend.
 
 ## One-time setup
@@ -12,7 +12,7 @@ The Resend API key never reaches the Vite frontend.
 3. Create an API key (`re_...`).
 4. Sending address used by this worker:
    - **From:** `MSBT Admissions <admissions@msbt.co.uk>`
-   - **To:** `naveed.rehman@msbt.co.uk`
+   - **To:** `admissions@msbt.co.uk`
    - **Reply-To:** the visitor’s email (so Naveed can reply in one click)
 
 ### 2. Deploy the Worker
@@ -39,7 +39,7 @@ Optional vars (already set in `wrangler.jsonc`):
 
 | Variable | Default |
 |----------|---------|
-| `CONTACT_TO_EMAIL` | `naveed.rehman@msbt.co.uk` |
+| `CONTACT_TO_EMAIL` | `admissions@msbt.co.uk` |
 | `CONTACT_FROM_EMAIL` | `MSBT Admissions <admissions@msbt.co.uk>` |
 | `SITE_URL` | `https://www.msbt.co.uk` |
 
