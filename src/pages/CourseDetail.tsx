@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CourseSidebar from "@/components/CourseSidebar";
 import CourseDetailTabs from "@/components/CourseDetailTabs";
-import { getCourse, proposedOthmNotice } from "@/data/msbt";
+import { getCourse } from "@/data/msbt";
 
 export default function CourseDetail() {
   const { slug = "" } = useParams();
@@ -53,44 +53,12 @@ export default function CourseDetail() {
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/85" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 lg:px-8">
-          {course.proposed && (
-            <div className="mb-5 rounded-xl border border-accent-blue/30 bg-[#eef7fd] px-4 py-3 text-sm font-bold text-accent-blue-deep md:text-base">
-              Status: Proposed Programme – Subject to OTHM Approval · Applications: Register
-              Interest Only
-            </div>
-          )}
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_280px]">
             <div>
               <p className="text-sm font-medium text-navy">{course.level}</p>
               <h1 className="mt-2 font-display text-3xl font-bold text-ink md:text-4xl">
                 {course.title}
               </h1>
-              {course.proposed && (
-                <dl className="mt-4 grid gap-2 text-sm text-muted sm:grid-cols-2">
-                  {course.credits != null && (
-                    <div>
-                      <dt className="inline font-semibold text-ink">Credits: </dt>
-                      <dd className="inline">{course.credits}</dd>
-                    </div>
-                  )}
-                  {course.studyMode && (
-                    <div>
-                      <dt className="inline font-semibold text-ink">Study mode: </dt>
-                      <dd className="inline">{course.studyMode}</dd>
-                    </div>
-                  )}
-                  {course.awardingOrganisation && (
-                    <div className="sm:col-span-2">
-                      <dt className="inline font-semibold text-ink">Awarding organisation: </dt>
-                      <dd className="inline">{course.awardingOrganisation}</dd>
-                    </div>
-                  )}
-                  <div className="sm:col-span-2">
-                    <dt className="inline font-semibold text-ink">Duration: </dt>
-                    <dd className="inline">{course.duration}</dd>
-                  </div>
-                </dl>
-              )}
               <div className="mt-4 flex flex-wrap gap-2">
                 {course.tags.map((t) => (
                   <span
@@ -115,15 +83,8 @@ export default function CourseDetail() {
 
       <section className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
-          <div className="min-w-0 space-y-5">
-            <div className="rounded-3xl border border-line bg-white p-6 md:p-8 card-shadow">
-              <CourseDetailTabs course={course} />
-            </div>
-            {course.proposed && (
-              <p className="rounded-2xl border border-accent-blue/20 bg-[#f0f8fd] p-5 text-sm font-medium leading-relaxed text-ink">
-                {proposedOthmNotice}
-              </p>
-            )}
+          <div className="min-w-0 rounded-3xl border border-line bg-white p-6 md:p-8 card-shadow">
+            <CourseDetailTabs course={course} />
           </div>
           <CourseSidebar course={course} />
         </div>

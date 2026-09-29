@@ -3,7 +3,6 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import DeferredMount from "@/components/DeferredMount";
 
-const ProposedOthmSection = lazy(() => import("@/components/ProposedOthmSection"));
 const CourseGrid = lazy(() =>
   import("@/components/CourseSections").then((m) => ({ default: m.CourseGrid })),
 );
@@ -31,12 +30,6 @@ export default function Home() {
         <Hero />
         <Navbar overlay />
       </div>
-
-      <DeferredMount minHeight={720} rootMargin="60px 0px">
-        <Suspense fallback={<SectionFallback height={720} />}>
-          <ProposedOthmSection />
-        </Suspense>
-      </DeferredMount>
 
       <DeferredMount minHeight={640} rootMargin="80px 0px">
         <Suspense fallback={<SectionFallback height={640} />}>

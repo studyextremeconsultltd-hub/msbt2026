@@ -48,9 +48,7 @@ export default function CourseSidebar({ course }: { course: Course }) {
         email: email.trim(),
         phone: phone.trim(),
         programme: programmeTitle,
-        message: course.proposed
-          ? `Register interest (proposed OTHM) for ${programmeTitle}.`
-          : `Course page enquiry for ${programmeTitle}.`,
+        message: `Course page enquiry for ${programmeTitle}.`,
         company,
       });
       setSubmitted(true);
@@ -99,17 +97,9 @@ export default function CourseSidebar({ course }: { course: Course }) {
     <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
       {/* Box 1 — Enquiry */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">
-        <h3 className="font-semibold text-ink">
-          {course.proposed ? "Register Your Interest" : "Course Enquiry"}
-        </h3>
+        <h3 className="font-semibold text-ink">Course Enquiry</h3>
         <p className="mt-1 text-xs text-muted">
-          {course.proposed
-            ? "Express interest only — this programme is not open for enrolment yet."
-            : (
-              <>
-                All fields marked <span className="text-red-500">*</span> must be completed.
-              </>
-            )}
+          All fields marked <span className="text-red-500">*</span> must be completed.
         </p>
         {submitted ? (
           <p className="mt-4 rounded-xl bg-teal/10 p-4 text-sm text-teal">
@@ -191,18 +181,12 @@ export default function CourseSidebar({ course }: { course: Course }) {
               disabled={enquiryLoading}
               className="w-full rounded-xl bg-accent-blue py-2.5 text-sm font-extrabold text-white shadow-md shadow-accent-blue/30 hover:bg-accent-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {enquiryLoading
-                ? "Sending…"
-                : course.proposed
-                  ? "Register Your Interest"
-                  : "Submit Enquiry"}
+              {enquiryLoading ? "Sending…" : "Submit Enquiry"}
             </button>
           </form>
         )}
       </div>
 
-      {!course.proposed && (
-      <>
       {/* Box 2 — Payment Details */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">
         <h3 className="font-semibold text-ink">Course Payment Details</h3>
@@ -351,18 +335,6 @@ export default function CourseSidebar({ course }: { course: Course }) {
           </p>
         </div>
       </div>
-      </>
-      )}
-
-      {course.proposed && (
-        <div className="rounded-2xl border border-accent-blue/25 bg-[#f0f8fd] p-5 card-shadow">
-          <h3 className="font-semibold text-accent-blue-deep">Enrolment not open</h3>
-          <p className="mt-2 text-sm leading-relaxed text-ink">
-            This is a proposed OTHM programme. Fees cannot be paid and learners cannot be
-            enrolled until MSBT receives written OTHM centre and qualification approval.
-          </p>
-        </div>
-      )}
 
       {/* Box 4 — Need More Info */}
       <div className="rounded-2xl border border-line bg-white p-5 card-shadow">
@@ -374,7 +346,6 @@ export default function CourseSidebar({ course }: { course: Course }) {
         <ul className="mt-4 space-y-2 text-sm text-ink">
           <li>Email: {site.email}</li>
           <li>Call us: {site.phone}</li>
-          <li>WhatsApp: {site.whatsapp}</li>
         </ul>
       </div>
     </aside>

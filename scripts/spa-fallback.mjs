@@ -18,26 +18,22 @@ const staticRoutes = [
   "university-progressions/index.html",
 ];
 
-/** Course slugs from public/courses image stems (fallback list kept in sync with msbt.ts). */
+/** Course slugs kept in sync with src/data/msbt.ts */
 const courseSlugs = [
-  "level-3-diploma-business-management",
   "level-4-diploma-business-management",
   "level-5-diploma-business-management",
   "level-5-extended-diploma-business-management",
   "level-6-diploma-business-management",
-  "level-7-diploma-strategic-management-leadership",
   "level-7-certificate-research-methods",
-  "level-3-foundation-health-social-care",
   "level-4-health-social-care-management",
   "level-5-extended-health-social-care-management",
-  "level-7-health-social-care-management",
 ];
 
 const coursesDir = join("public", "courses");
 if (existsSync(coursesDir)) {
   for (const file of readdirSync(coursesDir)) {
     const m = file.match(/^(.+?)(?:-sm)?\.webp$/);
-    if (m) courseSlugs.push(m[1]);
+    if (m && courseSlugs.includes(m[1])) courseSlugs.push(m[1]);
   }
 }
 
