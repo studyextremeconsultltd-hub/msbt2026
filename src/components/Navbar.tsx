@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { MessageCircle, Menu, Sparkles, X } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
-import { PaymentBrandRow } from "@/components/PaymentBrands";
 
 const links = [
   { href: "/", label: "Home" },
@@ -62,26 +61,19 @@ export default function Navbar({
             </span>
           </Link>
 
-          {/* Pay Now — PayPal + Stripe */}
+          {/* Register interest */}
           <Link
             to="/pay"
             className="cta-pay group relative hidden overflow-hidden rounded-2xl sm:inline-flex"
-            aria-label="Pay now with PayPal or Stripe"
+            aria-label="Register your interest"
           >
             <span className="absolute inset-0 bg-gradient-to-br from-[#1e6bb8] via-[#2f8fd4] to-[#56b7f5]" />
             <span className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/15 blur-xl transition group-hover:bg-white/25" aria-hidden />
             <span className="cta-shine" aria-hidden />
-            <span className="relative flex items-center gap-2.5 px-3 py-1.5 sm:px-3.5 sm:py-2">
-              <span className="flex flex-col leading-tight">
-                <span className="text-[11px] font-black uppercase tracking-[0.14em] text-white">
-                  Pay Now
-                </span>
-                <span className="text-[9px] font-semibold text-white/85">
-                  Secure checkout
-                </span>
+            <span className="relative flex items-center gap-2 px-3.5 py-2 sm:px-4">
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-white sm:text-xs">
+                Register your interest
               </span>
-              <span className="h-8 w-px bg-white/25" aria-hidden />
-              <PaymentBrandRow compact />
             </span>
           </Link>
 
@@ -112,18 +104,13 @@ export default function Navbar({
             to="/pay"
             className="cta-pay group relative mt-3 flex w-full overflow-hidden rounded-2xl"
             onClick={() => setOpen(false)}
+            aria-label="Register your interest"
           >
             <span className="absolute inset-0 bg-gradient-to-br from-[#1e6bb8] via-[#2f8fd4] to-[#56b7f5]" />
-            <span className="relative flex w-full items-center justify-between gap-3 px-4 py-3.5">
-              <span className="text-left">
-                <span className="block text-sm font-extrabold uppercase tracking-wide text-white">
-                  Pay Now
-                </span>
-                <span className="block text-xs font-medium text-white/85">
-                  PayPal &amp; Stripe accepted
-                </span>
+            <span className="relative flex w-full items-center justify-center px-4 py-3.5">
+              <span className="text-sm font-extrabold uppercase tracking-wide text-white">
+                Register your interest
               </span>
-              <PaymentBrandRow />
             </span>
           </Link>
           <Link

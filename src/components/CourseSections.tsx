@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ImageBannerSlider, { campusSlides } from "@/components/ImageBannerSlider";
-import { categories, enrollableCourses, formatGBP } from "@/data/msbt";
+import { categories, enrollableCourses } from "@/data/msbt";
 
 const bubbles = [
   "Flexible online study",
@@ -109,7 +109,7 @@ export function CourseGrid({ limit }: { limit?: number }) {
                 />
                 <div className="absolute inset-0 bg-navy/30" />
                 <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-4 py-1.5 text-sm font-bold text-navy">
-                  From {formatGBP(cat.from)}
+                  Register your interest
                 </span>
               </div>
               <div className="p-6">
@@ -160,8 +160,8 @@ export function CourseGrid({ limit }: { limit?: number }) {
                   {c.title}
                 </h3>
                 <p className="mt-2 line-clamp-2 text-base font-medium text-muted">{c.overview}</p>
-                <p className="mt-4 text-lg font-bold text-orange">
-                  From {formatGBP(c.pricing.discounted)}
+                <p className="mt-4 text-lg font-bold text-accent-blue-deep">
+                  Register your interest
                 </p>
               </div>
             </Link>

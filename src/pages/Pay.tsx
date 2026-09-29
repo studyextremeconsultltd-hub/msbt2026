@@ -1,47 +1,28 @@
 import { useMemo, useState } from "react";
-import {
-  ArrowRight,
-  CheckCircle2,
-  CreditCard,
-  LoaderCircle,
-  LockKeyhole,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, LoaderCircle, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { enrollableCourses, formatGBP } from "@/data/msbt";
-import {
-  startCheckout,
-  type CheckoutPaymentOption,
-  type CheckoutProvider,
-} from "@/lib/checkout";
-import { PaymentBrandRow } from "@/components/PaymentBrands";
+import { enrollableCourses } from "@/data/msbt";
+import { submitEnquiry } from "@/lib/enquiry";
 
 export default function Pay() {
-  const payableCourses = useMemo(() => enrollableCourses(), []);
-  const [courseSlug, setCourseSlug] = useState(payableCourses[0]?.slug ?? "");
-  const [paymentOption, setPaymentOption] =
-    useState<CheckoutPaymentOption>("full");
+  const programmes = useMemo(() => enrollableCourses(), []);
+  const [courseSlug, setCourseSlug] = useState(programmes[0]?.slug ?? "");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [method, setMethod] = useState<CheckoutProvider>("paypal");
+  const [done, setDone] = useState(false);
 
   const course = useMemo(
-    () => payableCourses.find((item) => item.slug === courseSlug) ?? payableCourses[0],
-    [courseSlug, payableCourses],
+    () => programmes.find((item) => item.slug === courseSlug) ?? programmes[0],
+    [courseSlug, programmes],
   );
 
   if (!course) return null;
-
-  const amount =
-    paymentOption === "deposit"
-      ? course.pricing.deposit
-      : course.pricing.discounted;
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -60,27 +41,29 @@ export default function Pay() {
       return;
     }
     if (!confirmed) {
-      setError("Please confirm the selected course and payment amount.");
+      setError("Please confirm you would like admissions to contact you.");
       return;
     }
 
     setLoading(true);
     try {
-      const checkoutUrl = await startCheckout({
-        courseSlug: course.slug,
-        paymentOption,
-        provider: method,
-        customerEmail: email.trim(),
-        customerName: name.trim(),
-        customerPhone: phone.trim(),
+      await submitEnquiry({
+        type: "contact",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        subject: "Register your interest — fees & enrolment",
+        programme: course.title,
+        message: `Register interest for ${course.title}. Please share programme and fee guidance.`,
       });
-      window.location.assign(checkoutUrl);
-    } catch (checkoutError) {
+      setDone(true);
+    } catch (submitError) {
       setError(
-        checkoutError instanceof Error
-          ? checkoutError.message
-          : "Secure checkout is unavailable right now.",
+        submitError instanceof Error
+          ? submitError.message
+          : "Unable to send your interest right now.",
       );
+    } finally {
       setLoading(false);
     }
   }
@@ -90,312 +73,163 @@ export default function Pay() {
       <Navbar />
 
       <section className="relative overflow-hidden border-b border-line bg-white py-12 text-ink">
-        <div className="absolute -right-20 -top-28 h-72 w-72 rounded-full bg-orange/15 blur-3xl" />
-        <div className="absolute -bottom-36 left-1/4 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
         <div className="relative mx-auto max-w-6xl px-4 text-center lg:px-8">
           <span className="inline-flex items-center gap-2 rounded-full border border-accent-blue/40 bg-accent-blue/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-accent-blue-deep shadow-sm">
             <Sparkles className="h-4 w-4" />
-            Secure course payment
+            Admissions
           </span>
           <h1 className="mt-4 font-display text-4xl font-bold text-navy md:text-5xl">
-            Pay your MSBT course fee
+            Register your interest
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted md:text-base">
-            Course fees are paid only on the official{" "}
-            <strong className="text-ink">PayPal</strong> or{" "}
-            <strong className="text-ink">Stripe</strong> websites. Money is deposited
-            directly into the <strong className="text-ink">MSBT merchant account</strong> —
-            never into a personal student wallet or third-party middleman.
+            Tell us which programme you are considering. Our admissions team will contact
+            you with guidance, entry information, and next steps.
           </p>
-          <div className="mx-auto mt-4 max-w-xl rounded-2xl border border-accent-blue/25 bg-[#eef7fd] px-4 py-3 text-sm font-semibold text-accent-blue-deep">
-            PayPal is live for MSBT. Choose PayPal below to pay securely to the official
-            college account.
-          </div>
-          <div className="mt-4 flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-2xl border border-accent-blue/20 bg-[#f0f8fd] px-4 py-2.5 shadow-sm">
-              <PaymentBrandRow />
-              <span className="text-xs font-bold text-accent-blue-deep">
-                PayPal &amp; Stripe
-              </span>
-            </span>
-          </div>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[1fr_360px] lg:px-8">
-        <form
-          onSubmit={handleSubmit}
-          className="rounded-3xl border border-line bg-white p-6 shadow-[0_18px_55px_rgba(15,31,61,0.1)] md:p-8"
-        >
-          <div className="flex items-center gap-3 border-b border-line pb-5">
-            <span className="rounded-2xl bg-accent-blue/10 p-3 text-accent-blue-deep">
-              <CreditCard className="h-6 w-6" />
-            </span>
-            <div>
-              <h2 className="text-xl font-extrabold text-ink">Payment details</h2>
-              <p className="text-sm text-muted">Fields marked * are required.</p>
-            </div>
-          </div>
-
-          <div className="mt-6 space-y-5">
-            <div>
-              <label htmlFor="pay-course" className="text-sm font-bold text-ink">
-                Select course *
-              </label>
-              <select
-                id="pay-course"
-                required
-                value={courseSlug}
-                onChange={(event) => {
-                  setCourseSlug(event.target.value);
-                  setError("");
-                }}
-                className="mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-orange focus:ring-4 focus:ring-orange/10"
-              >
-                {payableCourses.map((item) => (
-                  <option key={item.slug} value={item.slug}>
-                    {item.title}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <fieldset>
-              <legend className="text-sm font-bold text-ink">Payment method *</legend>
-              <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                <label
-                  className={`cursor-pointer rounded-2xl border p-4 transition ${
-                    method === "paypal"
-                      ? "border-accent-blue bg-accent-blue/5 ring-2 ring-accent-blue/20"
-                      : "border-line hover:border-accent-blue/40"
-                  }`}
-                >
-                  <span className="flex items-start gap-3">
-                    <input
-                      type="radio"
-                      name="payment-method"
-                      value="paypal"
-                      checked={method === "paypal"}
-                      onChange={() => {
-                        setMethod("paypal");
-                        setError("");
-                      }}
-                      className="mt-1 accent-accent-blue"
-                    />
-                    <span>
-                      <span className="block text-sm font-bold text-ink">
-                        PayPal — MSBT official account
-                      </span>
-                      <span className="block text-xs text-muted">
-                        Opens paypal.com · funds go to MSBT merchant account
-                      </span>
-                    </span>
-                  </span>
-                </label>
-                <label className="cursor-not-allowed rounded-2xl border border-line bg-[#f7f7f7] p-4 opacity-70">
-                  <span className="flex items-start gap-3">
-                    <input
-                      type="radio"
-                      name="payment-method"
-                      value="stripe"
-                      disabled
-                      checked={false}
-                      className="mt-1"
-                    />
-                    <span>
-                      <span className="block text-sm font-bold text-ink">
-                        Stripe (cards) — coming soon
-                      </span>
-                      <span className="block text-xs text-muted">
-                        Use PayPal for now so fees reach the MSBT account securely
-                      </span>
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend className="text-sm font-bold text-ink">Payment option *</legend>
-              <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                {(
-                  [
-                    [
-                      "full",
-                      "Full payment",
-                      course.pricing.discounted,
-                      "Discounted course fee",
-                    ],
-                    [
-                      "deposit",
-                      "Initial deposit",
-                      course.pricing.deposit,
-                      "Remaining instalments arranged by Admissions",
-                    ],
-                  ] as const
-                ).map(([value, label, price, description]) => (
-                  <label
-                    key={value}
-                    className={`cursor-pointer rounded-2xl border p-4 transition ${
-                      paymentOption === value
-                        ? "border-orange bg-orange/5 ring-2 ring-orange/15"
-                        : "border-line hover:border-gold"
-                    }`}
-                  >
-                    <span className="flex items-start gap-3">
-                      <input
-                        type="radio"
-                        name="payment-option"
-                        value={value}
-                        checked={paymentOption === value}
-                        onChange={() => {
-                          setPaymentOption(value);
-                          setError("");
-                        }}
-                        className="mt-1 accent-orange"
-                      />
-                      <span>
-                        <span className="block text-sm font-bold text-ink">{label}</span>
-                        <span className="block text-lg font-extrabold text-orange">
-                          {formatGBP(price)}
-                        </span>
-                        <span className="block text-xs text-muted">{description}</span>
-                      </span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label htmlFor="pay-name" className="text-sm font-bold text-ink">
-                  Full name *
-                </label>
-                <input
-                  id="pay-name"
-                  required
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  autoComplete="name"
-                  placeholder="Your full name"
-                  className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-orange focus:ring-4 focus:ring-orange/10"
-                />
-              </div>
-              <div>
-                <label htmlFor="pay-email" className="text-sm font-bold text-ink">
-                  Email address *
-                </label>
-                <input
-                  id="pay-email"
-                  required
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-orange focus:ring-4 focus:ring-orange/10"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="pay-phone" className="text-sm font-bold text-ink">
-                Phone number *
-              </label>
-              <input
-                id="pay-phone"
-                required
-                type="tel"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                autoComplete="tel"
-                placeholder="+44 ..."
-                className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-orange focus:ring-4 focus:ring-orange/10"
-              />
-            </div>
-
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-cream p-4 text-sm text-ink">
-              <input
-                type="checkbox"
-                checked={confirmed}
-                onChange={(event) => setConfirmed(event.target.checked)}
-                className="mt-0.5 accent-orange"
-              />
-              <span>
-                I confirm that I selected the correct course and understand the
-                payment amount shown in the order summary.
-              </span>
-            </label>
-
-            {error && (
-              <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-accent-blue to-accent-blue-deep px-5 py-4 text-white shadow-[0_14px_34px_rgba(75,168,232,0.35)] transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-blue/25 disabled:cursor-wait disabled:opacity-70"
+        {done ? (
+          <div className="rounded-3xl border border-line bg-white p-8 text-center shadow-[0_18px_55px_rgba(15,31,61,0.1)]">
+            <CheckCircle2 className="mx-auto h-12 w-12 text-teal" />
+            <h2 className="mt-4 text-2xl font-extrabold text-ink">Interest registered</h2>
+            <p className="mt-2 text-muted">
+              Thank you — admissions will be in touch shortly about {course.title}.
+            </p>
+            <Link
+              to="/courses"
+              className="mt-6 inline-flex rounded-full bg-accent-blue px-6 py-3 text-sm font-extrabold text-white hover:bg-accent-blue-deep"
             >
-              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-              <span className="relative flex flex-col items-center gap-1">
-                <span className="flex items-center justify-center gap-3">
+              Browse programmes
+            </Link>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-3xl border border-line bg-white p-6 shadow-[0_18px_55px_rgba(15,31,61,0.1)] md:p-8"
+          >
+            <h2 className="text-xl font-extrabold text-ink">Your details</h2>
+            <p className="text-sm text-muted">Fields marked * are required.</p>
+
+            <div className="mt-6 space-y-5">
+              <div>
+                <label htmlFor="interest-course" className="text-sm font-bold text-ink">
+                  Select programme *
+                </label>
+                <select
+                  id="interest-course"
+                  required
+                  value={courseSlug}
+                  onChange={(event) => {
+                    setCourseSlug(event.target.value);
+                    setError("");
+                  }}
+                  className="mt-2 w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
+                >
+                  {programmes.map((item) => (
+                    <option key={item.slug} value={item.slug}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="interest-name" className="text-sm font-bold text-ink">
+                    Full name *
+                  </label>
+                  <input
+                    id="interest-name"
+                    required
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    autoComplete="name"
+                    className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="interest-email" className="text-sm font-bold text-ink">
+                    Email address *
+                  </label>
+                  <input
+                    id="interest-email"
+                    required
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    autoComplete="email"
+                    className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="interest-phone" className="text-sm font-bold text-ink">
+                  Phone number *
+                </label>
+                <input
+                  id="interest-phone"
+                  required
+                  type="tel"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  autoComplete="tel"
+                  className="mt-2 w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition focus:border-accent-blue focus:ring-4 focus:ring-accent-blue/10"
+                />
+              </div>
+
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-[#f5f5f5] p-4 text-sm text-ink">
+                <input
+                  type="checkbox"
+                  checked={confirmed}
+                  onChange={(event) => setConfirmed(event.target.checked)}
+                  className="mt-0.5 accent-accent-blue"
+                />
+                <span>
+                  I would like MSBT Admissions to contact me about this programme.
+                </span>
+              </label>
+
+              {error && (
+                <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-accent-blue to-accent-blue-deep px-5 py-4 text-white shadow-[0_14px_34px_rgba(75,168,232,0.35)] transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-blue/25 disabled:cursor-wait disabled:opacity-70"
+              >
+                <span className="relative flex items-center justify-center gap-3 font-extrabold">
                   {loading ? (
                     <LoaderCircle className="h-6 w-6 animate-spin" />
                   ) : (
-                    <LockKeyhole className="h-6 w-6" />
+                    <>
+                      Register your interest
+                      <ArrowRight className="h-5 w-5" />
+                    </>
                   )}
-                  <span className="font-extrabold">
-                    {loading
-                      ? method === "paypal"
-                        ? "Opening PayPal…"
-                        : "Opening Stripe…"
-                      : method === "paypal"
-                        ? `Continue to PayPal — ${formatGBP(amount)}`
-                        : `Continue to Stripe — ${formatGBP(amount)}`}
-                  </span>
-                  {!loading && <ArrowRight className="h-5 w-5" />}
                 </span>
-                <PaymentBrandRow />
-              </span>
-            </button>
-          </div>
-        </form>
+              </button>
+            </div>
+          </form>
+        )}
 
         <aside className="h-fit rounded-3xl border border-line bg-white p-6 shadow-[0_18px_55px_rgba(15,31,61,0.1)] lg:sticky lg:top-24">
-          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-orange">
-            Order summary
+          <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-accent-blue-deep">
+            Selected programme
           </p>
           <h2 className="mt-3 text-lg font-extrabold text-ink">{course.title}</h2>
           <p className="mt-1 text-sm text-muted">{course.level}</p>
-
-          <div className="my-5 border-y border-line py-5">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-sm text-muted">
-                {paymentOption === "deposit" ? "Initial deposit" : "Full course fee"}
-              </span>
-              <span className="text-2xl font-extrabold text-orange">
-                {formatGBP(amount)}
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-3 text-sm text-muted">
-            <p className="flex items-start gap-2">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              You complete payment on Stripe or PayPal’s official website — MSBT never stores card details.
-            </p>
-            <p className="flex items-start gap-2">
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              The amount is fixed by the MSBT payment server before you leave this site.
-            </p>
-            <p className="flex items-start gap-2">
-              <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
-              Funds go directly to MSBT’s Stripe or PayPal merchant account in GBP.
-            </p>
-          </div>
+          <p className="mt-5 text-base font-extrabold text-accent-blue-deep">
+            Register your interest
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            Fee details are shared personally by Admissions after you register your
+            interest.
+          </p>
         </aside>
       </section>
 

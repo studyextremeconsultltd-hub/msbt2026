@@ -8,14 +8,14 @@ const companyLinks = [
   { href: "/contact", label: "Contact Us" },
   { href: "/courses", label: "Courses" },
   { href: "/university-progressions", label: "University Progressions" },
-  { href: "/pay", label: "How to Pay" },
+  { href: "/pay", label: "How to Apply" },
   { href: "/contact", label: "Request Info" },
-  { href: "/courses", label: "Fee & Pricing" },
+  { href: "/contact", label: "Register Interest" },
 ];
 
 const quickLinks = [
   { href: "/contact", label: "Register Interest" },
-  { href: "/pay", label: "Pay Online" },
+  { href: "/pay", label: "Register Online" },
   { href: "/about#governance", label: "Terms & Conditions" },
   { href: "/contact", label: "Student Support" },
 ];
