@@ -3,10 +3,21 @@ import { useState } from "react";
 import { MessageCircle, Menu, Sparkles, X } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 
-const links = [
+type NavLink = {
+  href: string;
+  label: string;
+  external?: boolean;
+};
+
+const links: NavLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/courses", label: "Courses" },
+  {
+    href: "https://learn.msbt.co.uk/?msg=not-logged-in",
+    label: "Student Portal",
+    external: true,
+  },
   { href: "/contact", label: "Contact Us" },
 ];
 
@@ -14,6 +25,36 @@ const navLinkClass = (overlay: boolean) =>
   `text-lg font-bold tracking-wide transition lg:text-xl ${
     overlay ? "text-navy hover:text-accent-blue-deep" : "text-ink hover:text-accent-blue-deep"
   }`;
+
+const portalLinkClass =
+  "inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-navy px-3 py-1.5 text-sm font-bold tracking-wide text-white transition hover:bg-accent-blue-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue-deep";
+
+const portalMobileClass =
+  "my-1 inline-flex items-center rounded-full bg-navy px-4 py-2.5 text-base font-bold tracking-wide text-white transition hover:bg-accent-blue-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-blue-deep";
+
+function NavEntry({
+  item,
+  className,
+  onClick,
+}: {
+  item: NavLink;
+  className: string;
+  onClick?: () => void;
+}) {
+  if (item.external) {
+    return (
+      <a href={item.href} className={className} aria-label={item.label} onClick={onClick}>
+        {item.label}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={item.href} className={className} onClick={onClick}>
+      {item.label}
+    </Link>
+  );
+}
 
 export default function Navbar({
   overlay = false,
@@ -32,18 +73,23 @@ export default function Navbar({
           : "sticky top-0 border-b border-line bg-white/95 backdrop-blur-md"
       } z-50 ${className}`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 lg:gap-4 lg:px-8 lg:py-3">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5 lg:gap-4 lg:px-8 lg:py-3 xl:flex-nowrap">
         <BrandLogo size="lg" />
 
-        <nav className="hidden items-center gap-5 md:flex lg:gap-7">
+        <nav
+          className="order-3 hidden w-full items-center gap-5 md:flex lg:gap-7 xl:order-2 xl:w-auto"
+          aria-label="Main"
+        >
           {links.map((l) => (
-            <Link key={l.label} to={l.href} className={navLinkClass(overlay)}>
-              {l.label}
-            </Link>
+            <NavEntry
+              key={l.label}
+              item={l}
+              className={l.external ? portalLinkClass : navLinkClass(overlay)}
+            />
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="order-2 flex shrink-0 items-center gap-2 sm:gap-2.5 xl:order-3">
           {/* Enquire Now */}
           <Link
             to="/contact"
@@ -90,16 +136,18 @@ export default function Navbar({
 
       {open && (
         <div className="border-t border-line bg-white px-4 py-4 md:hidden">
-          {links.map((l) => (
-            <Link
-              key={l.label}
-              to={l.href}
-              className="block py-2.5 text-base font-bold text-ink"
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </Link>
-          ))}
+          <nav aria-label="Mobile">
+            {links.map((l) => (
+              <NavEntry
+                key={l.label}
+                item={l}
+                className={
+                  l.external ? portalMobileClass : "block py-2.5 text-base font-bold text-ink"
+                }
+                onClick={() => setOpen(false)}
+              />
+            ))}
+          </nav>
           <Link
             to="/pay"
             className="cta-pay group relative mt-3 flex w-full overflow-hidden rounded-2xl"
